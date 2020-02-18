@@ -1,2 +1,3 @@
 # swe573
-Repository for SWE573 - BOUN
+A repository for the term project - Software Engineering Bogazici University
+
