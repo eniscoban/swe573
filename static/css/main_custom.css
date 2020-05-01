@@ -1,0 +1,29 @@
+.color_gr{color: #8A8FA3 !important;}
+.color_prim{color: #6845D3 !important;}
+.color_black{color: #282A3C !important;}
+.color_dark{color: #282A3C !important;}
+
+
+.rounded_18{
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+}
+
+.rounded_14{
+    -webkit-border-radius: 14px;
+    -moz-border-radius: 14px;
+    border-radius: 14px;
+}
+
+
+.siteW{
+    width: 80%;
+    height: auto;
+}
+
+.div120{width: 120px;}
+
+.ortala{ margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;}

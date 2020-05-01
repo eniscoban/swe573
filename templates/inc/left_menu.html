@@ -1,0 +1,95 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+
+        <div class="ortala div120">
+            <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
+                <div class="kt-avatar__holder" style="background-image: url(&quot;http://keenthemes.com/metronic/preview/default/custom/user/assets/media/users/100_1.jpg&quot;);"></div>
+                <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
+                    <i class="fa fa-pen"></i>
+                    <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg">
+                </label>
+                <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
+                    <i class="fa fa-times"></i>
+                </span>
+            </div>
+
+        </div>
+
+        <div class="text-center h4">{{ user_name }}</div>
+
+        <div class="mt-3">
+            <ul class="kt-nav kt-nav--md-space">
+
+                <li class="kt-nav__item {% if left_menu_selected == 'feed' %}active{% endif %}">
+                    <a href="/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-tint"></i>
+                        <span class="kt-nav__link-text">Feed</span>
+                    </a>
+                </li>
+
+                <li class="kt-nav__item {% if left_menu_selected == 'my_recipes' %}active{% endif %}">
+                    <a href="/my_recipes/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-concierge-bell"></i>
+                        <span class="kt-nav__link-text">My Recipes</span>
+                         <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--success">5</span>
+                        </span>
+                    </a>
+                </li>
+
+                  <li class="kt-nav__item {% if left_menu_selected == 'notifications' %}active{% endif %}">
+                    <a href="/notifications/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-bell"></i>
+                        <span class="kt-nav__link-text">Notifications</span>
+                         <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--warning">3</span>
+                        </span>
+                    </a>
+                </li>
+
+
+                <li class="kt-nav__separator"></li>
+
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-pizza-slice"></i>
+                        <span class="kt-nav__link-text">Become a Food Provider</span>
+                    </a>
+                </li>
+
+                <li class="kt-nav__separator"></li>
+
+
+
+                <li class="kt-nav__item {% if left_menu_selected == 'settings' %}active{% endif %}">
+                    <a href="/settings/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-cog"></i>
+                        <span class="kt-nav__link-text">Settings</span>
+                    </a>
+                </li>
+
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fab fa-github-alt"></i>
+                        <span class="kt-nav__link-text">About WWWE</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="{% url 'logout' %}" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-door-open"></i>
+                        <span class="kt-nav__link-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+
+
+
+
+
+
+    </div>
+</div>
+
