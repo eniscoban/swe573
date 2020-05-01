@@ -19,6 +19,9 @@ urlpatterns = [
     path('my_recipes/', pages_views.my_recipes, name='my_recipes'),
     path('notifications/', pages_views.notifications, name='notifications'),
     path('settings/', pages_views.settings, name='settings'),
+    path('settings/password', pages_views.settings_password, name='settings_password'),
+    path('settings/email', pages_views.settings_email, name='settings_email'),
+
     url(r'^ajax/validate_username/$', pages_views.validate_username, name='validate_username'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

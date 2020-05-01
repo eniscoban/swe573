@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <body class="class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+
+
+    <div class="row siteW ortala pt-2">
+        <div class="col-md-4 ">
+              {% include "inc/left_menu.html" %}
+        </div>
+        <div class="col-md-8">
+
+           <div class=" kt-grid__item kt-grid__item--fluid" id="kt_content">
+                <div class="kt-portlet kt-portlet--tabs">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-toolbar">
+                            <ul class="nav nav-tabs nav-tabs-space-xl nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#kt_apps_user_edit_tab_1" aria-selected="true">
+                                        <i class="fa fa-info-circle"></i> General
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#kt_apps_user_edit_tab_3" aria-selected="false">
+                                        <i class="fa fa-lock"></i> Change Password
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#kt_apps_user_edit_tab_4">
+                                        <i class="fa fa-envelope"></i> Change Email
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body">
+
+
+                            <div class="tab-content">
+
+
+                                <div class="tab-pane" id="kt_apps_user_edit_tab_4" role="tabpanel">
+                                    <div class="kt-form kt-form--label-right">
+                                        <div class="kt-form__body">
+                                            <div class="kt-section kt-section--first">
+                                                <div class="kt-section__body">
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">Email Address</label>
+                                                        <div class="col-lg-9 col-xl-6">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
+                                                                <input type="text" class="form-control" value="nick.watson@loop.com" placeholder="Email" aria-describedby="basic-addon1">
+                                                            </div>
+                                                            <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+</body>
+
+{% endblock %}

@@ -4,8 +4,29 @@ from django.forms import fields, CheckboxInput
 from django.shortcuts import render, redirect, get_object_or_404
 
 
-class GeneralSettingsForm(forms.ModelForm):
+class PassSettingsForm(forms.Form):
 
+    fields = ['pass1', 'pass2', 'pass3']
+    widgets = {
+        'pass1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        'pass2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
+        'pass3': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+
+    }
+
+
+
+class EmailSettingsForm(forms.ModelForm):
+    emailF = forms.EmailInput()
+
+    widgets = {
+        'emailF': forms.TextInput()
+    }
+
+
+
+
+class GeneralSettingsForm(forms.ModelForm):
     username_hidden = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     def __init__(self, *args, **kwargs):
@@ -28,6 +49,7 @@ class GeneralSettingsForm(forms.ModelForm):
         fields = ['username', 'date_birth', 'gender']
 
         widgets = {
-            'date_birth': forms.DateInput(attrs={'type': 'date', 'value': '2011-08-19', 'class': 'form-control', 'placeholder': 'Birth Day'}),
+            'date_birth': forms.DateInput(
+                attrs={'type': 'date', 'value': '2011-08-19', 'class': 'form-control', 'placeholder': 'Birth Day'}),
             'gender': forms.Select(choices=CHOICES, attrs={'class': 'form-control'})
         }

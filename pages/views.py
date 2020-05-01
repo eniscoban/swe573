@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from account.models import Account
-from .forms import GeneralSettingsForm
+from .forms import GeneralSettingsForm, PassSettingsForm
 from django.urls import reverse
+from django.contrib import messages
 
 
 def userDetails(request):
@@ -11,12 +12,14 @@ def userDetails(request):
         user_name = request.user.username
         birth_day = request.user.date_birth
         gender = request.user.gender
+        password = request.user.password
     else:
         is_auth = False
         user_name = ""
         birth_day = ""
         gender = ""
-    return {'is_auth': is_auth, 'user_name': user_name, 'birth_day': birth_day, 'gender': gender}
+        password = ""
+    return {'is_auth': is_auth, 'user_name': user_name, 'birth_day': birth_day, 'gender': gender, 'password': password}
 
 
 def home(request):
@@ -58,6 +61,46 @@ def notifications(request):
     return render(request, 'pages/notifications.html', args)
 
 
+def settings_email(request):
+    form = PassSettingsForm()
+    uDetails = userDetails(request)
+    args = {'title': "Settings",
+            'left_menu_selected': 'settings',
+            'is_auth': uDetails['is_auth'],
+            'user_name': uDetails['user_name'],
+            'form': form
+            }
+    return render(request, 'pages/settings_password.html', args)
+
+
+def settings_password(request):
+    uDetails = userDetails(request)
+
+    if request.method == 'POST':
+
+        current_password = request.POST.get('pass1')
+        next_password = request.POST.get('pass2')
+
+        if request.user.check_password(current_password):
+
+            request.user.set_password(next_password)
+            request.user.save()
+            messages.success(request, 'Password successfully updated!')
+        else:
+            messages.warning(request, 'Wrong current password!')
+
+        return HttpResponseRedirect(reverse('settings_password'))
+    else:
+
+        args = {'title': "Change Password",
+                'left_menu_selected': 'settings',
+                'is_auth': uDetails['is_auth'],
+                'user_name': uDetails['user_name']
+
+                }
+        return render(request, 'pages/settings_password.html', args)
+
+
 def settings(request):
 
     if request.method == 'POST':
@@ -68,6 +111,7 @@ def settings(request):
     else:
         uDetails = userDetails(request)
         form = GeneralSettingsForm(user_name=uDetails['user_name'], gender=uDetails['gender'], birth_day=uDetails['birth_day'])
+
         args = {'title': "Settings",
                 'left_menu_selected': 'settings',
                 'is_auth': uDetails['is_auth'],

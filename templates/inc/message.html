@@ -1,0 +1,11 @@
+ {% if messages %}
+    <script>
+     $( document ).ready(function() {
+         {% for message in messages %}
+            toastr.{{ message.tags }}("{{ message }}");
+         {% endfor %}
+    });
+
+    </script>
+
+{% endif %}
