@@ -43,7 +43,9 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     date_birth = models.DateField(verbose_name='date birth', null=True)
     gender_role = (('Female', "Female"), ('Male', "Male"))
-    gender = models.CharField(max_length=10, choices=gender_role, verbose_name='gender', default='Female',)
+    gender = models.CharField(max_length=10, choices=gender_role, verbose_name='gender', default='Female')
+    email_temp = models.EmailField(max_length=100, null=True, default=False, verbose_name="email_temp")
+    email_temp_hash = models.CharField(max_length=200, default='', verbose_name="email_temp_hash")
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'

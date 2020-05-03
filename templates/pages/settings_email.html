@@ -16,18 +16,18 @@
                         <div class="kt-portlet__head-toolbar">
                             <ul class="nav nav-tabs nav-tabs-space-xl nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#kt_apps_user_edit_tab_1" aria-selected="true">
+                                    <a class="nav-link " href="settings/" aria-selected="true">
                                         <i class="fa fa-info-circle"></i> General
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#kt_apps_user_edit_tab_3" aria-selected="false">
+                                    <a class="nav-link" href="settings/password" aria-selected="false">
                                         <i class="fa fa-lock"></i> Change Password
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#kt_apps_user_edit_tab_4">
+                                <li class="nav-item ">
+                                    <a class="nav-link active" href="settings/email">
                                         <i class="fa fa-envelope"></i> Change Email
                                     </a>
                                 </li>
@@ -40,25 +40,44 @@
                             <div class="tab-content">
 
 
-                                <div class="tab-pane" id="kt_apps_user_edit_tab_4" role="tabpanel">
+                                <div class="tab-pane active" id="kt_apps_user_edit_tab_4" role="tabpanel">
                                     <div class="kt-form kt-form--label-right">
                                         <div class="kt-form__body">
+                                            <form method="POST" class="kt-form" action="/settings/email">
+                                            {% csrf_token %}
+
                                             <div class="kt-section kt-section--first">
                                                 <div class="kt-section__body">
+
                                                     <div class="form-group row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label">Email Address</label>
+                                                        <label class="col-lg-4 ">Current Email Address: </label>
+                                                        <div class="col-lg-8 ">
+                                                            <div class="font-weight-bold" >{{ email_address }}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="kt-separator  kt-separator--fit kt-separator--border-solid"></div>
+
+                                                    <div class="form-group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">New Email Address</label>
                                                         <div class="col-lg-9 col-xl-6">
-                                                            <div class="input-group">
-                                                                <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                                <input type="text" class="form-control" value="nick.watson@loop.com" placeholder="Email" aria-describedby="basic-addon1">
-                                                            </div>
-                                                            <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span>
+
+                                                          <input type="text" id="new_email" name="new_email" class="form-control" value=""  >
+
                                                         </div>
                                                     </div>
 
                                                 </div>
-                                            </div>
 
+
+                                                 <div class="kt-separator  kt-separator--fit kt-separator--border-solid"></div>
+
+                                                <div class="text-center">
+                                                    <button type="submit" onclick="return checkform();" class="btn btn-success btn-wide">Send Confirmation Email</button>
+                                                </div>
+
+                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -74,10 +93,22 @@
 
 
 
+<script>
+    function checkform(){
+        let new_email = $("#new_email").val();
+
+        if (mainjs.validateEmail(new_email) === false) {
+           toastr.warning("Please enter a valid email address!");
+           return false;
+        }else{
+            return true;
+        }
+
+    }
+</script>
 
 
-
-
+{% include "inc/message.html" %}
 </body>
 
 {% endblock %}
