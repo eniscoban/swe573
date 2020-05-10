@@ -1,16 +1,10 @@
 <div class="kt-portlet kt-portlet--mobile">
     <div class="kt-portlet__body">
-
+ {% load static %}
         <div class="ortala div120">
             <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
-                <div class="kt-avatar__holder" style="background-image: url(&quot;http://keenthemes.com/metronic/preview/default/custom/user/assets/media/users/100_1.jpg&quot;);"></div>
-                <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
-                    <i class="fa fa-pen"></i>
-                    <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg">
-                </label>
-                <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
-                    <i class="fa fa-times"></i>
-                </span>
+                <div class="kt-avatar__holder" style=" background-size: cover; background-image: url({% static 'profile_photos/' %}{{ profile_photo }});"></div>
+
             </div>
 
         </div>

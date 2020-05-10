@@ -10,16 +10,232 @@
         </div>
         <div class="col-md-8">
 
+            <form>
             <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">Create Recipe</h3>
+                    </div>
+                </div>
                 <div class="kt-portlet__body">
-                    <h2>Create Recipe</h2>
+
+                    <div class="form-group">
+                        <label>Recipe Name</label>
+                        <input type="text" class="form-control" name="recipe_name" id="recipe_name"  >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ingredients</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="ingredient" id="ingredient">
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-primary" onclick="addIngredient(); return false;">Add</a>
+                            </div>
+                        </div>
+                        <div id="ing_list_div" class="mt-2"></div>
+
+                    </div>
+
+                    <div class="form-group">
+                            <label>How to cook?</label>
+                            <textarea class="form-control" id="recipe_description" id="recipe_description" rows="4"></textarea>
+                     </div>
+
+
+                    <div class="form-group">
+                        <label for="exampleSelect1">Recipe Category</label>
+                        <select class="form-control" id="recipe_category" name="recipe_category">
+                            {% for each in  categories %}
+                            <option value="{{ each.id }}">{{ each.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleSelect1">Recipe Cuisine</label>
+                        <select class="form-control" id="recipe_cuisine" name="recipe_cuisine">
+                            {% for each in  cuisines %}
+                            <option value="{{ each.id }}">{{ each.cuisine_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group  ">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <label>Tags</label>
+                                <input type="text" id="recipe_tag" name="recipe_tag" class="form-control">
+                                <div id="tag_list_div" class="mt-2"></div>
+                            </div>
+                            <div class="col-md-5">
+                                <div id="tag_res" class="kt-shape-bg-color-2 p-2 kt-scroll d-none" style=" max-height: 200px; overflow: auto; width: 100%;"></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <div class="kt-portlet__foot">
+                    <div class="kt-form__actions text-center">
+                        <a href="#" onclick="mainjs.create_recipe_ajax(); return false;" class="btn btn-primary">Calculate Nutrient Values and Create Recipe</a>
+                        <a href="#" onclick="restCallIngredients_Edenam(); return false;" class="btn btn-primary">TEST</a>
+
+                    </div>
                 </div>
             </div>
+            </form>
 
         </div>
 
     </div>
 
+
+
+
+<script>
+ingredients_ready = [];
+tags_ready = {};
+
+function addSelected(tid,tad) {
+
+    $("#tag_res").addClass('d-none');
+    $("#tag_res").html('');
+    $("#recipe_tag").val('');
+
+    tags_ready[tid] = tad;
+
+    list_selected_tags();
+}
+
+function removeSelected(keyComing) {
+    delete tags_ready[keyComing];
+    list_selected_tags();
+}
+
+function list_selected_tags() {
+    willadd = '';
+
+    for (let [key, value] of Object.entries(tags_ready)) {
+       willadd += '<span class="kt-badge kt-badge--dark kt-badge--inline mr-2">'+value+' <a href="#" class="kt-font-warning" onclick="removeSelected(\''+key+'\'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></span>';
+    }
+
+    $("#tag_list_div").html(willadd);
+
+}
+
+function delay(fn, ms) {
+  let timer = 0
+  return function(...args) {
+    clearTimeout(timer)
+    timer = setTimeout(fn.bind(this, ...args), ms || 0)
+  }
+}
+
+function restCallTag_Wikidata() {
+    query = $("#recipe_tag").val();
+    $.ajax({
+        url: 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+query+'&format=json&language=en&type=item&continue=0',
+        type: 'get',
+        data: {query: query},
+        dataType: 'json',
+        success: function(json) {
+
+            added_list = '';
+            json.search.forEach(
+                function(each){
+                    added_list += '<a href="#" onclick="addSelected(\''+each.id+'\',\''+each.match.text+'\'); return false;" class="btn btn-outline-hover-primary w-100"><div class="text-left"><div class="font-weight-bold">'+each.match.text+'</div><div><small>'+each.description+'</small></div></div></a>';
+                }
+            );
+            $("#tag_res").removeClass('d-none');
+            $("#tag_res").html(added_list);
+        }
+    });
+
+}
+
+
+jQuery(document).ready(function() {
+
+    $('#recipe_tag').keyup(delay(function (e) {
+      restCallTag_Wikidata();
+    }, 500));
+
+});
+
+
+function addIngredient() {
+    let ing = $("#ingredient").val();
+    if(ing.length >= 3) {
+        ingredients_ready.push(ing);
+        $("#ingredient").val('');
+        list_ingredients()
+    }
+}
+
+function removeIngredient(index) {
+    ingredients_ready.splice(index, 1);
+    list_ingredients()
+}
+
+function list_ingredients() {
+    willadd = '<table class="table table-bordered">';
+
+    i = 0;
+    ingredients_ready.forEach(function(item){
+        willadd += '<tr><td >'+item+'</td>  <td class="text-center" width="80"><a href="#" class="kt-font-warning" onclick="removeIngredient('+i+'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></td></tr>';
+        i++;
+    });
+
+    willadd += '</table>';
+
+    $("#ing_list_div").html(willadd);
+
+}
+
+
+test_ing = {
+  "title": "Fresh Ham Roasted With Rye Bread and Dried Fruit Stuffing",
+  "prep": "1. Have your butcher bone and butterfly the ham and score the fat in a diamond pattern. ...",
+  "yield": "About 15 servings",
+  "ingr": [
+    "1 fresh ham, about 18 pounds, prepared by your butcher (See Step 1)",
+    "7 cloves garlic, minced",
+    "1 tablespoon caraway seeds, crushed",
+    "4 teaspoons salt",
+    "Freshly ground pepper to taste",
+    "1 teaspoon olive oil",
+    "1 medium onion, peeled and chopped",
+    "3 cups sourdough rye bread, cut into 1/2-inch cubes",
+    "1 1/4 cups coarsely chopped pitted prunes",
+    "1 1/4 cups coarsely chopped dried apricots",
+    "1 large tart apple, peeled, cored and cut into 1/2-inch cubes",
+    "2 teaspoons chopped fresh rosemary",
+    "1 egg, lightly beaten",
+    "1 cup chicken broth, homemade or low-sodium canned"
+  ]
+}
+
+function restCallIngredients_Edenam() {
+
+    $.ajax({
+        url: 'https://api.edamam.com/api/nutrition-details?app_id=1c77e1ea&app_key=a502c9604e38dedbeb3f042e4956325a',
+        type: 'post',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(test_ing),
+        success: function(json) {
+
+            console.log(json);
+
+        }
+    });
+
+}
+
+
+</script>
 
 
 

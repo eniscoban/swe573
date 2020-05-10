@@ -41,6 +41,7 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    profile_photo = models.CharField(max_length=30, default='prf_2.png')
     date_birth = models.DateField(verbose_name='date birth', null=True)
     gender_role = (('Female', "Female"), ('Male', "Male"))
     gender = models.CharField(max_length=10, choices=gender_role, verbose_name='gender', default='Female')

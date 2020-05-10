@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^confirm_email/(?P<email_hash>\w{0,200})/$', pages_views.confirm_email, name='confirm_email'),
 
     url(r'^ajax/validate_username/$', pages_views.validate_username, name='validate_username'),
+    url(r'^ajax/create_recipe_ajax/', pages_views.create_recipe_ajax, name='create_recipe_ajax'),
+    url(r'^ajax/change_avatar/', pages_views.change_avatar, name='change_avatar'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

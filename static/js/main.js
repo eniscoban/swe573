@@ -120,6 +120,53 @@ var mainjs = {
 
     },
 
+    change_avatar: function(){
+
+         $.ajax({
+                url: '/ajax/change_avatar/',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    location.reload();
+                }
+            });
+    },
+
+    create_recipe_ajax:function() {
+         //var window = $(window)
+         let csrftoken = Cookies.get('csrftoken');
+
+         let recipe_name = $("#recipe_name").val();
+         let recipe_description = $("#recipe_description").val();
+         let recipe_category = $("#recipe_category").val();
+         let recipe_cuisine = $("#recipe_cuisine").val();
+         let ingredients_ready = window.ingredients_ready;
+
+
+
+         $.ajax({
+                url: '/ajax/create_recipe_ajax/',
+                type: 'POST',
+                headers: {'X-CSRFToken': csrftoken},
+                data: {
+                    'recipe_name': recipe_name,
+                    'recipe_description': recipe_description,
+                    'recipe_category': recipe_category,
+                    'recipe_cuisine': recipe_cuisine,
+                    'ingredients_ready': ingredients_ready
+
+                },
+                dataType: 'json',
+                success: function (data) {
+
+                    console.log(data);
+                }
+            });
+
+    },
+
+
     checkUsername:function() {
         let id_username = $("#id_username").val();
         let id_username_ori = $("#id_username_hidden").val();

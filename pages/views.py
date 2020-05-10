@@ -7,7 +7,9 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from random import random
+import random
 import hashlib
+from recipe.models import Recipe, Category, Cuisine
 
 
 def userDetails(request):
@@ -18,6 +20,7 @@ def userDetails(request):
         gender = request.user.gender
         password = request.user.password
         email_address = request.user.email
+        profile_photo = request.user.profile_photo
     else:
         is_auth = False
         user_name = ""
@@ -25,8 +28,9 @@ def userDetails(request):
         gender = ""
         password = ""
         email_address = ""
+        profile_photo = ""
     return {'is_auth': is_auth, 'user_name': user_name, 'email_address': email_address, 'birth_day': birth_day,
-            'gender': gender, 'password': password}
+            'gender': gender, 'password': password, 'profile_photo':profile_photo}
 
 
 def home(request):
@@ -35,7 +39,8 @@ def home(request):
         args = {'title': "Home Title",
                 'left_menu_selected': 'feed',
                 'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name']
+                'user_name': uDetails['user_name'],
+                'profile_photo': uDetails['profile_photo']
                 }
         return render(request, 'pages/home.html', args)
     else:
@@ -43,12 +48,35 @@ def home(request):
 
 
 def create_recipe(request):
+    categories = Category.objects.all()
+    cuisines = Cuisine.objects.all()
+
     uDetails = userDetails(request)
     args = {'title': "Create Recipe",
             'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name']
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo'],
+            'categories': categories,
+            'cuisines': cuisines
             }
     return render(request, 'pages/create_recipe.html', args)
+
+
+def create_recipe_ajax(request):
+    recipe_name = request.POST.get('recipe_name')
+    recipe_description = request.POST.get('recipe_description')
+    recipe_category = request.POST.get('recipe_category')
+    recipe_cuisine = request.POST.get('recipe_cuisine')
+    ingredients_ready = request.POST.getlist('ingredients_ready[]')
+
+    data = {
+        'recipe_name': recipe_name,
+        'recipe_description': recipe_description,
+        'recipe_category': recipe_category,
+        'recipe_cuisine': recipe_cuisine,
+        'ingredients_ready': ingredients_ready
+    }
+    return JsonResponse(data)
 
 
 def my_recipes(request):
@@ -56,7 +84,8 @@ def my_recipes(request):
     args = {'title': "My Recipe",
             'left_menu_selected': 'my_recipes',
             'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name']
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo']
             }
     return render(request, 'pages/my_recipes.html', args)
 
@@ -66,7 +95,8 @@ def notifications(request):
     args = {'title': "Notifications",
             'left_menu_selected': 'notifications',
             'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name']
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo']
             }
     return render(request, 'pages/notifications.html', args)
 
@@ -122,7 +152,8 @@ def settings_email(request):
                 'left_menu_selected': 'settings',
                 'is_auth': uDetails['is_auth'],
                 'user_name': uDetails['user_name'],
-                'email_address': uDetails['email_address']
+                'email_address': uDetails['email_address'],
+                'profile_photo': uDetails['profile_photo']
                 }
         return render(request, 'pages/settings_email.html', args)
 
@@ -149,7 +180,8 @@ def settings_password(request):
         args = {'title': "Change Password",
                 'left_menu_selected': 'settings',
                 'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name']
+                'user_name': uDetails['user_name'],
+                'profile_photo': uDetails['profile_photo']
 
                 }
         return render(request, 'pages/settings_password.html', args)
@@ -171,6 +203,7 @@ def settings(request):
                 'is_auth': uDetails['is_auth'],
                 'user_name': uDetails['user_name'],
                 'birth_day': uDetails['birth_day'],
+                'profile_photo': uDetails['profile_photo'],
                 'gender': uDetails['gender'],
                 'form': form
                 }
@@ -181,5 +214,16 @@ def validate_username(request):
     username = request.GET.get('username', None)
     data = {
         'is_taken': Account.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)
+
+
+def change_avatar(request):
+    avatars = ['prf_1.png', 'prf_2.png', 'prf_3.png', 'prf_4.png', 'prf_5.png', 'prf_6.png',
+               'prf_7.png', 'prf_8.png', 'prf_9.png']
+    request.user.profile_photo = random.choice(avatars)
+    request.user.save()
+    data = {
+        'result': 'success'
     }
     return JsonResponse(data)
