@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from account import views as account_views
 from pages import views as pages_views
-
+from recipe import views as recipe_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,6 +21,8 @@ urlpatterns = [
     path('settings/', pages_views.settings, name='settings'),
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
+
+    url(r'^recipe/(?P<recipe_id>\w{0,50})/$', recipe_views.recipe, name='recipe'),
 
     url(r'^confirm_email/(?P<email_hash>\w{0,200})/$', pages_views.confirm_email, name='confirm_email'),
 

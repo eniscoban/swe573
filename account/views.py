@@ -6,6 +6,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.urls import reverse
 from .forms import RegisterForm, LoginForm
+from recipe.models import Recipe
 
 
 def user_signup(request):
@@ -56,3 +57,28 @@ def user_login(request):
 def logout(request):
     django_logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+
+def userDetails(request):
+    if request.user.is_authenticated:
+        is_auth = True
+        user_name = request.user.username
+        birth_day = request.user.date_birth
+        gender = request.user.gender
+        password = request.user.password
+        email_address = request.user.email
+        profile_photo = request.user.profile_photo
+    else:
+        is_auth = False
+        user_name = ""
+        birth_day = ""
+        gender = ""
+        password = ""
+        email_address = ""
+        profile_photo = ""
+    return {'is_auth': is_auth, 'user_name': user_name, 'email_address': email_address, 'birth_day': birth_day,
+            'gender': gender, 'password': password, 'profile_photo': profile_photo}
+
+
+def recipe_count(request):
+    return Recipe.objects.filter(recipe_user=request.user.id).count()

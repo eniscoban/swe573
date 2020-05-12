@@ -17,7 +17,7 @@
                 <li class="kt-nav__item {% if left_menu_selected == 'feed' %}active{% endif %}">
                     <a href="/" class="kt-nav__link">
                         <i class="kt-nav__link-icon fa fa-tint"></i>
-                        <span class="kt-nav__link-text">Feed</span>
+                        <span class="kt-nav__link-text">Home</span>
                     </a>
                 </li>
 
@@ -26,7 +26,7 @@
                         <i class="kt-nav__link-icon fa fa-concierge-bell"></i>
                         <span class="kt-nav__link-text">My Recipes</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--success">5</span>
+                            <span class="kt-badge kt-badge--success">{{ my_recipe_count }}</span>
                         </span>
                     </a>
                 </li>
@@ -36,7 +36,7 @@
                         <i class="kt-nav__link-icon fa fa-bell"></i>
                         <span class="kt-nav__link-text">Notifications</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--warning">3</span>
+                            <span class="kt-badge kt-badge--warning">{{ my_notification_count }}</span>
                         </span>
                     </a>
                 </li>

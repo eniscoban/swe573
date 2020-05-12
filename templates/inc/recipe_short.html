@@ -1,0 +1,29 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+ {% load static %}
+        <div class="row">
+            <div class="col-md-8">
+                <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
+                    <img src="{% static 'profile_photos/' %}{{ profile_photo }}" alt="image">
+                </span> {{ user_name }}</div>
+            <div class="col-md-4 text-right">{{ each.added_date }}</div>
+
+        </div>
+
+        <div class="row mt-4">
+            <h4 class="w-100" ><a href="/recipe/{{ each.id }}/">{{ each.recipe_name }}</a></h4>
+            <div class="w-100" >{{ each.recipe_cuisine }} / {{ each.recipe_category }}</div>
+
+            <div class="w-100 mt-2">{{ each.recipe_description|truncatechars:355 }}</div>
+        </div>
+
+        <div class="kt-separator kt-separator--space-md kt-separator--border-dashed"></div>
+
+        <div class="row">
+            <i class="la la-heart-o h3 float-left mr-2"></i> <div class="h5 pt-1 float-left mr-5">5</div>
+            <i class="la la-comment h3 float-left mr-2"></i> <div class="h5 pt-1">2</div>
+
+        </div>
+
+    </div>
+</div>

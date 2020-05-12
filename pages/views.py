@@ -10,37 +10,20 @@ from random import random
 import random
 import hashlib
 from recipe.models import Recipe, Category, Cuisine
-
-
-def userDetails(request):
-    if request.user.is_authenticated:
-        is_auth = True
-        user_name = request.user.username
-        birth_day = request.user.date_birth
-        gender = request.user.gender
-        password = request.user.password
-        email_address = request.user.email
-        profile_photo = request.user.profile_photo
-    else:
-        is_auth = False
-        user_name = ""
-        birth_day = ""
-        gender = ""
-        password = ""
-        email_address = ""
-        profile_photo = ""
-    return {'is_auth': is_auth, 'user_name': user_name, 'email_address': email_address, 'birth_day': birth_day,
-            'gender': gender, 'password': password, 'profile_photo':profile_photo}
-
+from account.views import userDetails, recipe_count
 
 def home(request):
     if request.user.is_authenticated:
         uDetails = userDetails(request)
+        recipeCount = recipe_count(request)
+
         args = {'title': "Home Title",
                 'left_menu_selected': 'feed',
                 'is_auth': uDetails['is_auth'],
                 'user_name': uDetails['user_name'],
-                'profile_photo': uDetails['profile_photo']
+                'profile_photo': uDetails['profile_photo'],
+                'my_recipe_count': recipeCount,
+                'my_notification_count': 2
                 }
         return render(request, 'pages/home.html', args)
     else:
@@ -52,10 +35,14 @@ def create_recipe(request):
     cuisines = Cuisine.objects.all()
 
     uDetails = userDetails(request)
+    recipeCount = recipe_count(request)
+
     args = {'title': "Create Recipe",
             'is_auth': uDetails['is_auth'],
             'user_name': uDetails['user_name'],
             'profile_photo': uDetails['profile_photo'],
+            'my_recipe_count': recipeCount,
+            'my_notification_count': 2,
             'categories': categories,
             'cuisines': cuisines
             }
@@ -80,12 +67,20 @@ def create_recipe_ajax(request):
 
 
 def my_recipes(request):
+
+    recipes_all = Recipe.objects.filter(recipe_user=request.user.id)
+
     uDetails = userDetails(request)
+    recipeCount = recipe_count(request)
+
     args = {'title': "My Recipe",
             'left_menu_selected': 'my_recipes',
             'is_auth': uDetails['is_auth'],
             'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo']
+            'profile_photo': uDetails['profile_photo'],
+            'my_recipe_count': recipeCount,
+            'my_notification_count': 2,
+            'recipes_all': recipes_all
             }
     return render(request, 'pages/my_recipes.html', args)
 
@@ -119,7 +114,7 @@ def confirm_email(request, email_hash):
 
 
 def settings_email(request):
-    uDetails = userDetails(request)
+
 
     if request.method == 'POST':
         new_email = request.POST.get('new_email')
@@ -147,19 +142,22 @@ def settings_email(request):
 
         return HttpResponseRedirect(reverse('settings_email'))
     else:
+        uDetails = userDetails(request)
+        recipeCount = recipe_count(request)
 
         args = {'title': "Settings",
                 'left_menu_selected': 'settings',
                 'is_auth': uDetails['is_auth'],
                 'user_name': uDetails['user_name'],
                 'email_address': uDetails['email_address'],
-                'profile_photo': uDetails['profile_photo']
+                'profile_photo': uDetails['profile_photo'],
+                'my_recipe_count': recipeCount,
+                'my_notification_count': 2
                 }
         return render(request, 'pages/settings_email.html', args)
 
 
 def settings_password(request):
-    uDetails = userDetails(request)
 
     if request.method == 'POST':
 
@@ -176,12 +174,15 @@ def settings_password(request):
 
         return HttpResponseRedirect(reverse('settings_password'))
     else:
-
+        uDetails = userDetails(request)
+        recipeCount = recipe_count(request)
         args = {'title': "Change Password",
                 'left_menu_selected': 'settings',
                 'is_auth': uDetails['is_auth'],
                 'user_name': uDetails['user_name'],
-                'profile_photo': uDetails['profile_photo']
+                'profile_photo': uDetails['profile_photo'],
+                'my_recipe_count': recipeCount,
+                'my_notification_count': 2
 
                 }
         return render(request, 'pages/settings_password.html', args)
@@ -195,6 +196,7 @@ def settings(request):
         return HttpResponseRedirect(reverse('settings'))
     else:
         uDetails = userDetails(request)
+        recipeCount = recipe_count(request)
         form = GeneralSettingsForm(user_name=uDetails['user_name'], gender=uDetails['gender'],
                                    birth_day=uDetails['birth_day'])
 
@@ -205,6 +207,8 @@ def settings(request):
                 'birth_day': uDetails['birth_day'],
                 'profile_photo': uDetails['profile_photo'],
                 'gender': uDetails['gender'],
+                'my_recipe_count': recipeCount,
+                'my_notification_count': 2,
                 'form': form
                 }
         return render(request, 'pages/settings.html', args)
@@ -227,3 +231,5 @@ def change_avatar(request):
         'result': 'success'
     }
     return JsonResponse(data)
+
+
