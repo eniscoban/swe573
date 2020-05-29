@@ -6,6 +6,7 @@ from django.conf.urls import url, include
 from account import views as account_views
 from pages import views as pages_views
 from recipe import views as recipe_views
+from api import views as api_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r'^ajax/validate_username/$', pages_views.validate_username, name='validate_username'),
     url(r'^ajax/create_recipe_ajax/', pages_views.create_recipe_ajax, name='create_recipe_ajax'),
     url(r'^ajax/change_avatar/', pages_views.change_avatar, name='change_avatar'),
+
+    path('api/', include('api.urls')),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

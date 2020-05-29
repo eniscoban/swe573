@@ -5,136 +5,102 @@ var mainjs = {
         return re.test(email);
     },
 
-	saveSettings:function(){
+    login:function(){
+        let id_email = $("#id_email").val();
+        let id_password = $("#id_password").val();
 
-        let memberName = $("#memberName").val();
-        let memberSurName = $("#memberSurName").val();
-        let memberEmail = $("#memberEmail").val();
-        let memberPhone = $("#memberPhone").val();
-        let memberCompanyName = $("#memberCompanyName").val();
+        let csrftoken = Cookies.get('csrftoken');
+
+         $.ajax({
+            url: '/api/login/',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {
+                'email': id_email,
+                'password': id_password
+            },
+
+            success: function (data) {
+               if(data.authenticated){
+                   window.location.href = "/";
+               }else{
+                   toastr.warning("Please check your email address or password.");
+               }
+
+            }
+         });
+
+         return false;
+
+    },
+
+    register:function(){
+        let id_email = $("#id_email").val();
+        let id_password = $("#id_password").val();
+        let id_username = $("#id_username").val();
 
         var onay = 1;
         var metin = "";
 
-    
-        if (memberName < 1) {
+        if (id_username.length < 6) {
             onay = 0;
-            metin = metin + "\nPlease enter your name!";
+            metin = "Username must be at least 6 character!";
         }
-        if (memberSurName < 1) {
-            onay = 0;
-            metin = metin + "\nPlease enter your last name!";
-        }
-        if (this.validateEmail(memberEmail) === false) {
+
+        if (this.validateEmail(id_email) === false) {
             onay = 0;
             metin = metin + "\nPlease enter a valid email address!";
         }
 
-        if (onay == 0) {
-            swal.fire(metin); 
-        }else{
-            
+        if (id_password.length < 8) {
+            onay = 0;
+            metin = "Password must be at least 8 character!";
+        }
 
-            $.ajax({ 
-                type: "POST",
-                url: "/a/ax/saveSettings",
-                data: { memberName : memberName, memberSurName: memberSurName, memberEmail: memberEmail,memberPhone : memberPhone, memberCompanyName: memberCompanyName    },
-                //async: false,
-                success : function(response){ 
-                    
-                    if(response == "success"){
-                        location.reload();
-                    }else{
-                        alert("An unknown error occured, please try again!");
-                    }
-                
-                }
+        if (onay == 0) {
+            toastr.warning(metin);
+        } else {
+
+            let csrftoken = Cookies.get('csrftoken');
+
+            $.ajax({
+            url: '/api/register/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            data: {
+                'email': id_email,
+                'password': id_password,
+                'username': id_username
+            },
+            success: function (data) {
+               if(data.authenticated){
+                   window.location.href = "/";
+               }else{
+                    toastr.warning("Please check your email address or password.");
+               }
+            }
             });
 
 
         }
-       
-       
-       
-			
-
-    },
-    
-    savePassword: function(){
-
-        let oldPass = $("#oldPass").val();
-        let newPass1 = $("#newPass1").val();
-        let newPass2 = $("#newPass2").val();
-
-        var onay = 1;
-        var metin = "";
-
-    
-        if (oldPass < 8) {
-            onay = 0;
-            metin = metin + "\nPlease enter your current password!";
-        }
-        if (newPass1 < 8 || newPass2 < 8) {
-            onay = 0;
-            metin = metin + "\nPassword must be at least 8-characters!";
-        }
-
-        if (newPass1 !== newPass2) {
-            onay = 0;
-            metin = metin + "\nNew passwords must match!";
-        }
-
-        if (onay == 0) {
-            swal.fire(metin); 
-        }else{
-            
-
-            $.ajax({ 
-                type: "POST",
-                url: "/a/ax/savePassword",
-                data: { oldPass : oldPass, newPass1: newPass1, newPass2: newPass2   },
-                //async: false,
-                success : function(response){ 
-                   
-                    if(response == "success"){
-                        swal.fire({
-                            title: "Done!",
-                            text: "Password changed succesfully.",
-                            type: "success",
-                            buttonsStyling: false,
-                            confirmButtonText: "OK",
-                            confirmButtonClass: "btn btn-brand"
-                        });
-                        
-                    }else{
-                        alert("Your current password is not correct. Please check it!");
-                    }
-                
-                }
-            });
-
-
-        }
-       
-
 
     },
 
     change_avatar: function(){
-
          $.ajax({
-                url: '/ajax/change_avatar/',
-                data: {},
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    location.reload();
-                }
-            });
+            url: '/ajax/change_avatar/',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                location.reload();
+            }
+         });
     },
 
     create_recipe_ajax:function() {
-         //var window = $(window)
          let csrftoken = Cookies.get('csrftoken');
 
          let recipe_name = $("#recipe_name").val();
@@ -142,27 +108,25 @@ var mainjs = {
          let recipe_category = $("#recipe_category").val();
          let recipe_cuisine = $("#recipe_cuisine").val();
          let ingredients_ready = window.ingredients_ready;
-
-
+         let recipe_serving = $("#recipe_serving").val();
 
          $.ajax({
-                url: '/ajax/create_recipe_ajax/',
-                type: 'POST',
-                headers: {'X-CSRFToken': csrftoken},
-                data: {
-                    'recipe_name': recipe_name,
-                    'recipe_description': recipe_description,
-                    'recipe_category': recipe_category,
-                    'recipe_cuisine': recipe_cuisine,
-                    'ingredients_ready': ingredients_ready
-
-                },
-                dataType: 'json',
-                success: function (data) {
-
-                    console.log(data);
-                }
-            });
+            url: '/ajax/create_recipe_ajax/',
+            type: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            data: {
+                'recipe_name': recipe_name,
+                'recipe_description': recipe_description,
+                'recipe_category': recipe_category,
+                'recipe_cuisine': recipe_cuisine,
+                'recipe_serving': recipe_serving,
+                'ingredients_ready': ingredients_ready
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            }
+         });
 
     },
 
@@ -174,7 +138,6 @@ var mainjs = {
         if (id_username_ori == id_username) {
             $("#username_check_icon").attr('class', 'kt-font-success flaticon2-check-mark');
         } else {
-
 
             $.ajax({
                 url: '/ajax/validate_username/',
@@ -193,7 +156,6 @@ var mainjs = {
         }
 
     }
-
 
 };
 

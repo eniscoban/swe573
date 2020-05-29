@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from account.views import userDetails, recipe_count
+from api.views import userDetails, recipe_count
 from recipe.models import Recipe, Ingredient, Nutrients
 
 

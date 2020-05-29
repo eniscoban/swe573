@@ -14,24 +14,24 @@
 
 							<div class="kt-login__signin"><div class="kt-login__head"><h3 class="kt-login__title">Register</h3></div>
 
-                                <form method="POST" class="kt-form" action="/signup/">
-                                    {% csrf_token %}
 
 									<div class="input-group">
-                                        {{ form.email }}
-									</div>
-									<div class="input-group">
-                                        {{ form.password }}
+                                        <input type="email" id="id_email" class="form-control"  placeholder="Email Address">
 									</div>
 
-                                    <div class="input-group">
-									     {{ form.username }}
+
+                                    <div class="input-group  mt-4">
+									     <input type="username" id="id_username" class="form-control" placeholder="Username">
 									</div>
 
-									<div class="kt-login__actions">
-										<button  id="kt_login_signin_submit" class="btn btn-brand btn-elevate kt-login__btn-primary">Register</button>
+                                    <div class="input-group  mt-4">
+                                        <input type="password" id="id_password" class="form-control" placeholder="Password">
 									</div>
-								</form>
+
+									<div class="kt-login__actions mt-4">
+										<a href="#" onclick="mainjs.register(); return false;" class="btn btn-brand btn-elevate kt-login__btn-primary">Register</a>
+									</div>
+
 							</div>
 
 							<div class="kt-login__account">
@@ -48,7 +48,6 @@
 		</div>
 
 
-    <script src="{% static 'js/' %}login.js?v=1" type="text/javascript"></script>
 
     <span id="donen"></span>
     </body>

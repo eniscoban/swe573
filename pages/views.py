@@ -1,20 +1,26 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+import requests
+
 from account.models import Account
 from .forms import GeneralSettingsForm, PassSettingsForm
 from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.conf import settings
+import datetime, random, hashlib
 from random import random
-import random
-import hashlib
-from recipe.models import Recipe, Category, Cuisine
-from account.views import userDetails, recipe_count
+from recipe.models import Recipe, Category, Cuisine, Ingredient
+#from account.views import userDetails, recipe_count
+from rest_framework.authtoken.models import Token
+from api.views import userDetails, recipe_count, list_my_recipes,list_all_recipes
 
 def home(request):
-    if request.user.is_authenticated:
-        uDetails = userDetails(request)
+
+    if 'wwwe' in request.session:
+        token = request.session['wwwe']
+        user = Token.objects.get(key=token).user
+
+        uDetails = userDetails(request, token)
         recipeCount = recipe_count(request)
 
         args = {'title': "Home Title",
@@ -50,17 +56,44 @@ def create_recipe(request):
 
 
 def create_recipe_ajax(request):
+    uDetails = userDetails(request)
+    account = Account.objects.get(id=request.user.id)
+
+
     recipe_name = request.POST.get('recipe_name')
     recipe_description = request.POST.get('recipe_description')
     recipe_category = request.POST.get('recipe_category')
     recipe_cuisine = request.POST.get('recipe_cuisine')
+    recipe_serving = request.POST.get('recipe_serving')
     ingredients_ready = request.POST.getlist('ingredients_ready[]')
+
+    recipe_cuisine = Cuisine.objects.get(id=recipe_cuisine)
+    recipe_category = Category.objects.get(id=recipe_category)
+
+    newRecipe = Recipe(
+        recipe_name=recipe_name,
+        recipe_user=account,
+        recipe_description=recipe_description,
+        recipe_cuisine=recipe_cuisine,
+        recipe_category=recipe_category,
+        how_many_person=recipe_serving,
+        added_date=datetime.datetime.now()
+
+    )
+    newRecipe.save(force_insert=True)
+
+    newRecipeSec = Recipe.objects.get(id=newRecipe.id)
+
+    for each in ingredients_ready:
+        newIngredient = Ingredient(ingredient_name=each, recipe_id=newRecipeSec)
+        newIngredient.save()
 
     data = {
         'recipe_name': recipe_name,
         'recipe_description': recipe_description,
         'recipe_category': recipe_category,
         'recipe_cuisine': recipe_cuisine,
+        'recipe_serving': recipe_serving,
         'ingredients_ready': ingredients_ready
     }
     return JsonResponse(data)
@@ -68,22 +101,27 @@ def create_recipe_ajax(request):
 
 def my_recipes(request):
 
-    recipes_all = Recipe.objects.filter(recipe_user=request.user.id)
+    if 'wwwe' in request.session:
+        token = request.session['wwwe']
 
-    uDetails = userDetails(request)
-    recipeCount = recipe_count(request)
+        headers = {'Authorization': 'Token '+token}
+        r = requests.post('http://127.0.0.1:8000/api/list_my_recipes/', params=request.POST, headers=headers)
 
-    args = {'title': "My Recipe",
-            'left_menu_selected': 'my_recipes',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': recipeCount,
-            'my_notification_count': 2,
-            'recipes_all': recipes_all
-            }
-    return render(request, 'pages/my_recipes.html', args)
+        uDetails = userDetails(request, token)
+        recipeCount = recipe_count(request)
 
+        args = {'title': "My Recipe",
+                'left_menu_selected': 'my_recipes',
+                'is_auth': uDetails['is_auth'],
+                'user_name': uDetails['user_name'],
+                'profile_photo': uDetails['profile_photo'],
+                'my_recipe_count': recipeCount,
+                'my_notification_count': 2,
+                'recipes_all': r.json()
+                }
+        return render(request, 'pages/my_recipes.html', args)
+    else:
+        return HttpResponseRedirect(reverse('user_login'))
 
 def notifications(request):
     uDetails = userDetails(request)
@@ -231,5 +269,7 @@ def change_avatar(request):
         'result': 'success'
     }
     return JsonResponse(data)
+
+
 
 
