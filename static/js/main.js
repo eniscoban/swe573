@@ -11,28 +11,52 @@ var mainjs = {
 
         let csrftoken = Cookies.get('csrftoken');
 
-         $.ajax({
-            url: '/api/login/',
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            data: {
-                'email': id_email,
-                'password': id_password
-            },
+        var onay = 1;
+        var metin = "";
 
-            success: function (data) {
-               if(data.authenticated){
-                   window.location.href = "/";
-               }else{
-                   toastr.warning("Please check your email address or password.");
-               }
+        if (this.validateEmail(id_email) === false) {
+            onay = 0;
+            metin = metin + "\nPlease enter a valid email address!";
+        }
 
-            }
-         });
+        if (id_password.length < 8) {
+            onay = 0;
+            metin = "Password must be at least 8 character!";
+        }
 
-         return false;
+        if (onay == 0) {
+            toastr.warning(metin);
+        } else {
+
+            $.ajax({
+                url: '/login/',
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                data: {
+                    'email': id_email,
+                    'password': id_password
+                },
+
+                success: function (data) {
+
+                    if(data.authenticated == true){
+                        window.location.href = "/";
+                    }else{
+                        toastr.warning("Please check your email address or password.");
+                    }
+
+                }
+            });
+
+
+
+        }
+
+
+
+
 
     },
 
@@ -66,7 +90,7 @@ var mainjs = {
             let csrftoken = Cookies.get('csrftoken');
 
             $.ajax({
-            url: '/api/register/',
+            url: '/signup/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken },
             data: {
@@ -75,10 +99,11 @@ var mainjs = {
                 'username': id_username
             },
             success: function (data) {
-               if(data.authenticated){
+
+               if(data.authenticated == true){
                    window.location.href = "/";
                }else{
-                    toastr.warning("Please check your email address or password.");
+                    toastr.warning("Please change your email and username. Such a user exists!");
                }
             }
             });
@@ -129,7 +154,6 @@ var mainjs = {
          });
 
     },
-
 
     checkUsername:function() {
         let id_username = $("#id_username").val();

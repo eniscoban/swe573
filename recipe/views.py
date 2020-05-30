@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from api.views import userDetails, recipe_count
+from account.views import userDetails
 from recipe.models import Recipe, Ingredient, Nutrients
 
 
 def recipe(request, recipe_id):
     uDetails = userDetails(request)
-    recipeCount = recipe_count(request)
     recipeDetails = Recipe.objects.get(id=recipe_id)
     ingredients = Ingredient.objects.filter(recipe_id=recipe_id)
     nutrients = Nutrients.objects.filter(recipe_id=recipe_id, entry_type='totalNutrients' )
@@ -27,8 +26,8 @@ def recipe(request, recipe_id):
             'cautions': recipeDetails.cautions,
             'ingredients': ingredients,
             'nutrients': nutrients,
-            'my_recipe_count': recipeCount,
-            'my_notification_count': 2
+            'my_recipe_count': uDetails['recipe_count'],
+            'my_notification_count': uDetails['notification_count']
             }
     return render(request, 'pages/recipe.html', args)
 

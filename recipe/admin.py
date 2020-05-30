@@ -8,6 +8,6 @@ admin.site.register(Ingredient)
 
 
 class NutrientsAdmin(admin.ModelAdmin):
-    list_display = ['id', 'nutrient_name', 'recipe_id', 'entry_type']
+    list_display = ['id', 'nutrient_name', 'nutrient_quantity', 'nutrient_unit']
 
 admin.site.register(Nutrients, NutrientsAdmin)

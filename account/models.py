@@ -47,6 +47,7 @@ class Account(AbstractBaseUser):
     gender = models.CharField(max_length=10, choices=gender_role, verbose_name='gender', default='Female')
     email_temp = models.EmailField(max_length=100, null=True, default=False, verbose_name="email_temp")
     email_temp_hash = models.CharField(max_length=200, default='', verbose_name="email_temp_hash")
+    token = models.CharField(max_length=200, default='', verbose_name="token")
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'

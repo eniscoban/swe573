@@ -26,12 +26,22 @@
 
                     <div class="form-group">
                         <label>Ingredients</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="ingredient" id="ingredient">
+                        <input type="text" class="form-control" placeholder="First Search Ingredients by Name" name="ingredient_name_search" id="ingredient_name_search">
+
+                        <div class="input-group mt-2">
+                            <select class="form-control" id="ingredient_name" name="ingredient_name">
+
+                            </select>
+                            <select class="form-control"  id="ingredient_portion" name="ingredient_portion">
+
+                            </select>
+                            <input type="text" class="form-control" placeholder="Amount" name="ingredient_amount" id="ingredient_amount">
                             <div class="input-group-append">
                                 <a href="#" class="btn btn-primary" onclick="addIngredient(); return false;">Add</a>
                             </div>
                         </div>
+
+
                         <div id="ing_list_div" class="mt-2"></div>
 
                     </div>
@@ -88,15 +98,12 @@
                             </div>
                         </div>
 
-
-
                     </div>
 
                 </div>
                 <div class="kt-portlet__foot">
                     <div class="kt-form__actions text-center">
-                        <a href="#" onclick="mainjs.create_recipe_ajax(); return false;" class="btn btn-primary">Calculate Nutrient Values and Create Recipe</a>
-                        <a href="#" onclick="restCallIngredients_Edenam(); return false;" class="btn btn-primary">TEST</a>
+                        <a href="#" onclick="addRecipe(); return false;" class="btn btn-primary">Calculate Nutrient Values and Create Recipe</a>
 
                     </div>
                 </div>
@@ -108,11 +115,19 @@
     </div>
 
 
-
-
 <script>
-ingredients_ready = [];
-tags_ready = {};
+var ingredients_ready = [];
+var nutrients_ready = [];
+var tags_ready = [];
+let usda_key="KuIcKvoCAgZHxfps4rw4Zsa0Os9HW41e6hEoWVOZ";
+
+var temp_ingredient_name = "";
+var temp_ingredient_fdcId = "";
+var temp_ingredient_amount = 0;
+var temp_portition_name = "";
+var temp_portition_gram = 0;
+var temp_nutrients = [];
+
 
 function addSelected(tid,tad) {
 
@@ -120,22 +135,28 @@ function addSelected(tid,tad) {
     $("#tag_res").html('');
     $("#recipe_tag").val('');
 
-    tags_ready[tid] = tad;
+
+    tags_ready.push({
+       tid: tid,
+       name: tad
+    });
 
     list_selected_tags();
 }
 
 function removeSelected(keyComing) {
-    delete tags_ready[keyComing];
+    //delete tags_ready[keyComing];
+    tags_ready = tags_ready.filter(item => item.tid !== keyComing);
     list_selected_tags();
 }
 
 function list_selected_tags() {
     willadd = '';
 
-    for (let [key, value] of Object.entries(tags_ready)) {
-       willadd += '<span class="kt-badge kt-badge--dark kt-badge--inline mr-2">'+value+' <a href="#" class="kt-font-warning" onclick="removeSelected(\''+key+'\'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></span>';
-    }
+
+    tags_ready.forEach(function(item){
+        willadd += '<span class="kt-badge kt-badge--dark kt-badge--inline mr-2">'+item.name+' <a href="#" class="kt-font-warning" onclick="removeSelected(\''+item.tid+'\'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></span>';
+    });
 
     $("#tag_list_div").html(willadd);
 
@@ -152,7 +173,7 @@ function delay(fn, ms) {
 function restCallTag_Wikidata() {
     query = $("#recipe_tag").val();
     $.ajax({
-        url: 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search='+query+'&format=json&language=en&type=item&continue=0',
+        url: 'https://wikidata.org/w/api.php?action=wbsearchentities&search='+query+'&format=json&language=en&type=item&continue=0',
         type: 'get',
         data: {query: query},
         dataType: 'json',
@@ -178,21 +199,59 @@ jQuery(document).ready(function() {
       restCallTag_Wikidata();
     }, 500));
 
+    $('#ingredient_name_search').keyup(delay(function (e) {
+      getIngredientNames();
+    }, 500));
+
+     $('#ingredient_name').on("change", function() {
+        getIngredientPortition();
+     });
+
+
+
 });
 
 
 function addIngredient() {
-    let ing = $("#ingredient").val();
-    if(ing.length >= 3) {
-        ingredients_ready.push(ing);
-        $("#ingredient").val('');
-        list_ingredients()
-    }
+
+    temp_ingredient_amount = $("#ingredient_amount").val();
+    temp_portition_gram = $("#ingredient_portion").val();
+    temp_portition_name = $("#ingredient_portion option:selected").text();
+
+
+     $.each(temp_nutrients, function(index, element) {
+        nutrients_ready.push({
+            nutrient_name:element.nutrient_name,
+            nutrient_unit: element.nutrient_unitName,
+            nutrient_amount:element.nutrient_amount*100/temp_portition_gram*temp_ingredient_amount,
+            ingredient_id:temp_ingredient_fdcId
+        });
+     });
+
+
+    ingredients_ready.push({
+        name : temp_ingredient_name + ": " + temp_ingredient_amount +" x " + "("+ temp_portition_name +")",
+        fdcId : temp_ingredient_fdcId
+    });
+
+    $("#ingredient").val('');
+    list_ingredients();
+
+    $("#ingredient_name_search").val("");
+    $("#ingredient_amount").val("");
+    $('#ingredient_name').empty();
+    $('#ingredient_portion').empty();
+
+
 }
 
-function removeIngredient(index) {
+function removeIngredient(index,fdcId) {
     ingredients_ready.splice(index, 1);
     list_ingredients()
+
+    //remove from nutrients
+    nutrients_ready = nutrients_ready.filter(item => item.ingredient_id !== String(fdcId));
+
 }
 
 function list_ingredients() {
@@ -200,7 +259,7 @@ function list_ingredients() {
 
     i = 0;
     ingredients_ready.forEach(function(item){
-        willadd += '<tr><td >'+item+'</td>  <td class="text-center" width="80"><a href="#" class="kt-font-warning" onclick="removeIngredient('+i+'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></td></tr>';
+        willadd += '<tr><td >'+item.name+'</td>  <td class="text-center" width="80"><a href="#" class="kt-font-warning" onclick="removeIngredient('+i+','+item.fdcId+'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></td></tr>';
         i++;
     });
 
@@ -210,45 +269,141 @@ function list_ingredients() {
 
 }
 
+function getIngredientNames(){
 
-test_ing = {
-  "title": "Fresh Ham Roasted With Rye Bread and Dried Fruit Stuffing",
-  "prep": "1. Have your butcher bone and butterfly the ham and score the fat in a diamond pattern. ...",
-  "yield": "About 15 servings",
-  "ingr": [
-    "1 fresh ham, about 18 pounds, prepared by your butcher (See Step 1)",
-    "7 cloves garlic, minced",
-    "1 tablespoon caraway seeds, crushed",
-    "4 teaspoons salt",
-    "Freshly ground pepper to taste",
-    "1 teaspoon olive oil",
-    "1 medium onion, peeled and chopped",
-    "3 cups sourdough rye bread, cut into 1/2-inch cubes",
-    "1 1/4 cups coarsely chopped pitted prunes",
-    "1 1/4 cups coarsely chopped dried apricots",
-    "1 large tart apple, peeled, cored and cut into 1/2-inch cubes",
-    "2 teaspoons chopped fresh rosemary",
-    "1 egg, lightly beaten",
-    "1 cup chicken broth, homemade or low-sodium canned"
-  ]
+    query = $("#ingredient_name_search").val();
+    $.ajax({
+        url: 'https://api.nal.usda.gov/fdc/v1/foods/search?query'+query+'&api_key='+usda_key,
+        type: 'get',
+        data: {query: query},
+        dataType: 'json',
+        success: function(data) {
+
+             $('#ingredient_name').empty();
+             $('#ingredient_portion').empty();
+             $("#ingredient_amount").val("");
+
+             $('#ingredient_name').append($('<option/>', {
+                value: 0,
+                text : "Please select"
+             }));
+
+            $.each(data.foods, function(index, element) {
+
+                if(element.brandOwner == null){
+                    text_add = "";
+                }else{
+                    text_add = " ("+element.brandOwner+")";
+                }
+
+                $('#ingredient_name').append($('<option/>', {
+                    value: element.fdcId,
+                    text : element.description+text_add
+                }));
+
+            });
+
+        }
+    });
 }
 
-function restCallIngredients_Edenam() {
+function getIngredientPortition(){
+    let fdcId = $("#ingredient_name").val();
+    temp_ingredient_name = $("#ingredient_name option:selected").text();
+    temp_ingredient_fdcId = fdcId;
 
     $.ajax({
-        url: 'https://api.edamam.com/api/nutrition-details?app_id=1c77e1ea&app_key=a502c9604e38dedbeb3f042e4956325a',
-        type: 'post',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        data: JSON.stringify(test_ing),
-        success: function(json) {
+        url: 'https://api.nal.usda.gov/fdc/v1/food/'+fdcId+'?api_key='+usda_key,
+        type: 'get',
+        data: {query: query},
+        dataType: 'json',
+        success: function(data) {
 
-            console.log(json);
+            temp_nutrients = [];
+            $.each(data.foodNutrients, function(index, element) {
+                if(element.amount > 0){
+                    temp_nutrients.push({nutrient_name:element.nutrient.name, nutrient_unitName:element.nutrient.unitName, nutrient_amount:element.amount});
+                }
+            });
+
+
+            // portition listing for dropdown list
+            $('#ingredient_portion').empty();
+
+            i = 0;
+            $.each(data.foodPortions, function(index, element) {
+
+                var desc = "";
+                if(element.portionDescription == null){
+                    desc = element.modifier+" "+element.gramWeight+"g";
+                }else{
+                    desc = element.portionDescription;
+                }
+
+                $('#ingredient_portion').append($('<option/>', {
+                    value: element.gramWeight,
+                    text : desc
+                }));
+                i++;
+            });
+
+            if(i == 0){
+                 $('#ingredient_portion').append($('<option/>', {
+                    value: "1",
+                    text : "gram"
+                }));
+            }
+
+
+
+        }
+    });
+
+
+}
+
+
+function addRecipe(){
+    $.each(ingredients_ready, function(index, element) {
+           console.log("name "+element.name);
+    });
+
+    let recipe_name = $("#recipe_name").val();
+    let recipe_description = $("#recipe_description").val();
+    let recipe_category = $("#recipe_category").val();
+    let recipe_cuisine = $("#recipe_cuisine").val();
+    let recipe_serving = $("#recipe_serving").val();
+
+    let sendData = {
+        recipe_name : recipe_name,
+        recipe_description: recipe_description,
+        recipe_category: recipe_category,
+        recipe_cuisine: recipe_cuisine,
+        recipe_serving: recipe_serving,
+        tags: JSON.stringify(tags_ready),
+        ingredients: JSON.stringify(ingredients_ready),
+        nutrients: JSON.stringify(nutrients_ready)
+
+    }
+
+
+    let csrftoken = Cookies.get('csrftoken');
+    $.ajax({
+        url: 'http://127.0.0.1:8000/api/create_recipe/',
+        type: 'post',
+        data: sendData,
+        headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
 
         }
     });
 
 }
+
+
+
 
 
 </script>

@@ -47,11 +47,6 @@ class Ingredient(models.Model):
 class Nutrients(models.Model):
 
     nutrient_name = models.CharField(max_length=200)
-
-    entry_role = (('totalNutrients', "totalNutrients"), ('totalDaily', "totalDaily"), ('totalNutrientsKCal',"totalNutrientsKCal"))
-    entry_type = models.CharField(max_length=50, choices=entry_role, verbose_name='entry_type', default='totalNutrients')
-
-    nutrient_label = models.CharField(max_length=200)
     nutrient_quantity = models.FloatField(default=0.0)
     nutrient_unit = models.CharField(max_length=300)
 
