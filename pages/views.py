@@ -96,7 +96,7 @@ def create_recipe_ajax(request):
 def my_recipes(request):
 
     uDetails = userDetails(request)
-    recipes_all = Recipe.objects.filter(recipe_user=request.user.id)
+    recipes_all = Recipe.objects.filter(recipe_user=request.user.id).order_by('-id')
 
     args = {'title': "My Recipe",
             'left_menu_selected': 'my_recipes',
@@ -108,6 +108,43 @@ def my_recipes(request):
             'recipes_all': recipes_all
             }
     return render(request, 'pages/my_recipes.html', args)
+
+
+def cuisine(request, cuisine_id):
+    uDetails = userDetails(request)
+    recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
+    cuis = Cuisine.objects.get(id=cuisine_id)
+
+    args = {'title': "My Recipe",
+            'left_menu_selected': '',
+            'is_auth': uDetails['is_auth'],
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo'],
+            'my_recipe_count': uDetails['recipe_count'],
+            'my_notification_count': uDetails['notification_count'],
+            'cuisine_name': cuis.cuisine_name,
+            'recipes_all': recipes_all
+            }
+    return render(request, 'pages/cuisine.html', args)
+
+
+def category(request, category_id):
+
+    uDetails = userDetails(request)
+    recipes_all = Recipe.objects.filter(recipe_category=category_id).order_by('-id')
+    cat = Category.objects.get(id=category_id)
+
+    args = {'title': "My Recipe",
+            'left_menu_selected': '',
+            'is_auth': uDetails['is_auth'],
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo'],
+            'my_recipe_count': uDetails['recipe_count'],
+            'my_notification_count': uDetails['notification_count'],
+            'category_name': cat.category_name,
+            'recipes_all': recipes_all
+            }
+    return render(request, 'pages/category.html', args)
 
 
 def notifications(request):

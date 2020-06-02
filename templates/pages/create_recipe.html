@@ -273,7 +273,7 @@ function getIngredientNames(){
 
     query = $("#ingredient_name_search").val();
     $.ajax({
-        url: 'https://api.nal.usda.gov/fdc/v1/foods/search?query'+query+'&api_key='+usda_key,
+        url: 'https://api.nal.usda.gov/fdc/v1/foods/search?query='+query+'&api_key='+usda_key,
         type: 'get',
         data: {query: query},
         dataType: 'json',

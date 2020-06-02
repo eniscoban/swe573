@@ -54,3 +54,13 @@ class Nutrients(models.Model):
 
     def __str__(self):
         return self.nutrient_name
+
+
+class Tags(models.Model):
+    tag_name = models.CharField(max_length=200)
+    tag_tid = models.CharField(max_length=200)
+
+    recipe_id = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.tag_name

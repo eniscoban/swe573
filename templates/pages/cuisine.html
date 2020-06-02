@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <body class="class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+
+
+    <div class="row siteW ortala pt-2">
+        <div class="col-md-4 ">
+              {% include "inc/left_menu.html" %}
+        </div>
+        <div class="col-md-8">
+
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__body">
+                    <h4>All {{ cuisine_name }} Recipes</h4>
+                </div>
+            </div>
+
+            {% for each in recipes_all %}
+                 {% include "inc/recipe_short.html" %}
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+</body>
+
+{% endblock %}

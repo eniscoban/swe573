@@ -23,6 +23,10 @@ urlpatterns = [
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
 
+    url(r'^cuisine/(?P<cuisine_id>\w{0,50})/$', pages_views.cuisine, name='cuisine'),
+    url(r'^category/(?P<category_id>\w{0,50})/$', pages_views.category, name='category'),
+
+
     url(r'^recipe/(?P<recipe_id>\w{0,50})/$', recipe_views.recipe, name='recipe'),
 
     url(r'^confirm_email/(?P<email_hash>\w{0,200})/$', pages_views.confirm_email, name='confirm_email'),

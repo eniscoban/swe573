@@ -4,6 +4,9 @@
     <body class="class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
 
  {% load static %}
+
+
+
     <div class="row siteW ortala pt-2">
         <div class="col-md-4 ">
               {% include "inc/left_menu.html" %}
@@ -25,7 +28,7 @@
 
                      <div class="row mt-4">
                         <h4 class="w-100 color_black" >{{ recipe_name }}</h4>
-                        <div class="w-100" >{{ recipe_cuisine }} / {{ recipe_category }} / {{ recipe_how_many_person }}-person</div>
+                        <div class="w-100" ><a href="/category/{{ recipe_category.id }}/">{{ recipe_category }}</a> / <a href="/cuisine/{{ recipe_cuisine.id }}/">{{ recipe_cuisine }}</a> / {{ recipe_how_many_person }}-person</div>
 
                         <div class="w-100 mt-2">{{ recipe_description}}</div>
                     </div>
@@ -57,28 +60,23 @@
                          </div>
                          <div class="col-md-6 ">
 
-                             <div style="border:2px #CCC solid;" >
+                             <div data-simplebar data-simplebar-auto-hide="false"  style="border:2px #CCC solid; height: 300px; " >
 
-                                 <div class="text-center border-bottom mb-3 p-3 color_black"><h5>Nutrition Facts</h5></div>
+                                 <div class="text-center border-bottom mb-3 p-3 color_black"><h5><strong>Nutrition Facts</strong></h5></div>
 
                                   <table class="table table-borderless">
                                      <tr>
                                          <td><strong>Total Calories</strong></td>
-                                         <td style="width: 120px" class="text-right">{{ calories_total }} kcal</td>
+                                         <td style="width: 120px" class="text-right">000 kcal</td>
                                      </tr>
                                  </table>
-
-                                 <div class="p-3">
-                                     <div class="mt-3  "><strong>Labels</strong> : {{ healthLabels }}</div>
-                                     <div class="mt-1 "><strong>Cautions</strong> : {{ cautions }}</div>
-                                 </div>
 
 
                                  <table class="mt-3 table table-striped">
                                       {% for each in nutrients %}
                                      <tr>
-                                         <td>{{ each.nutrient_label }}</td>
-                                         <td style="width: 120px" class="text-right">{{ each.nutrient_quantity|floatformat:2 }} {{ each.nutrient_unit }}</td>
+                                         <td>{{ each.nutrient_name }}</td>
+                                         <td style="width: 120px" class="text-right">{{ each.dcount|floatformat:2 }} {{ each.nutrient_unit }}</td>
                                      </tr>
                                      {% endfor %}
 

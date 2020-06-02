@@ -12,7 +12,7 @@
 
         <div class="row mt-4">
             <h4 class="w-100" ><a href="/recipe/{{ each.id }}/">{{ each.recipe_name }}</a></h4>
-            <div class="w-100" >{{ each.recipe_cuisine }} / {{ each.recipe_category }}</div>
+            <div class="w-100" >{{ each.recipe_category }} / {{ each.recipe_cuisine }}</div>
 
             <div class="w-100 mt-2">{{ each.recipe_description|truncatechars:355 }}</div>
         </div>

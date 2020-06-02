@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.status import HTTP_400_BAD_REQUEST
-from recipe.models import Recipe, Category, Cuisine, Ingredient
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags
 from account.models import Account
 from api.serializers import RecipeSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -107,6 +107,22 @@ def create_recipe(request):
         newIngredient = Ingredient(ingredient_name=each['name'], recipe_id=newRecipeSec)
         newIngredient.save()
 
+    for each in nutrients:
+        newNutrients = Nutrients(
+            nutrient_name=each['nutrient_name'],
+            nutrient_unit=each['nutrient_unit'],
+            nutrient_quantity=each['nutrient_amount'],
+            recipe_id=newRecipeSec)
+        newNutrients.save()
+
+    for each in tags:
+        newTags = Tags(
+            tag_name=each['name'],
+            tag_tid=each['tid'],
+            recipe_id=newRecipeSec)
+        newTags.save()
+
+
 
     data = {
         'newRecipeSec': "newRecipeSec",
@@ -114,6 +130,8 @@ def create_recipe(request):
         'recipe_name': recipe_name,
         'recipe_description': recipe_description,
         'ingredients': ingredients[0]['name'],
-        'nutrients': nutrients
+        'nutrients': nutrients[0]['nutrient_name'],
+        'tags': tags[0]['name']
+
     }
     return JsonResponse(data)
