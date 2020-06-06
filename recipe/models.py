@@ -1,7 +1,6 @@
 from django.db import models
 from account.models import Account
 
-
 class Cuisine(models.Model):
     cuisine_name = models.CharField(max_length=100)
 
@@ -59,8 +58,17 @@ class Nutrients(models.Model):
 class Tags(models.Model):
     tag_name = models.CharField(max_length=200)
     tag_tid = models.CharField(max_length=200)
-
     recipe_id = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.tag_name
+
+
+class Comments(models.Model):
+    comment = models.CharField(max_length=600)
+    comment_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
+    recipe_id = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
+    added_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.comment

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.status import HTTP_400_BAD_REQUEST
-from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments
 from account.models import Account
 from api.serializers import RecipeSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -133,5 +133,30 @@ def create_recipe(request):
         'nutrients': nutrients[0]['nutrient_name'],
         'tags': tags[0]['name']
 
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def add_comment(request):
+    user = Token.objects.get(key=request.auth).user
+    comment = request.data['comment']
+    recipe_id = request.data['recipe_id']
+    recipe = Recipe.objects.get(id=recipe_id)
+
+    newComment = Comments(
+        comment=comment,
+        comment_user=user,
+        recipe_id=recipe,
+        added_date=datetime.datetime.now()
+    )
+    newComment.save(force_insert=True)
+
+    data = {
+       # 'newComment': newComment.id,
+        'comment': comment,
+        'comment_user': user.username,
+        'added_date': datetime.datetime.now()
     }
     return JsonResponse(data)

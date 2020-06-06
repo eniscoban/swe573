@@ -7,10 +7,10 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import datetime, random, hashlib
 from random import random
-from recipe.models import Recipe, Category, Cuisine, Ingredient
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags
 from account.views import userDetails
 from rest_framework.authtoken.models import Token
-#from api.views import userDetails, recipe_count, list_my_recipes,list_all_recipes
+
 
 def home(request):
 
@@ -145,6 +145,33 @@ def category(request, category_id):
             'recipes_all': recipes_all
             }
     return render(request, 'pages/category.html', args)
+
+
+def tag(request, tag_id):
+
+    uDetails = userDetails(request)
+
+    tag_recipeid = Tags.objects.filter(tag_tid=tag_id)
+
+    arr = []
+    for each in tag_recipeid:
+        arr.append(each.recipe_id.id)
+
+    recipes_all = Recipe.objects.filter(id__in=arr).order_by('-id')
+
+    tag_name = Tags.objects.filter(tag_tid=tag_id)[:1]
+
+    args = {'title': "",
+            'left_menu_selected': '',
+            'is_auth': uDetails['is_auth'],
+            'user_name': uDetails['user_name'],
+            'profile_photo': uDetails['profile_photo'],
+            'my_recipe_count': uDetails['recipe_count'],
+            'my_notification_count': uDetails['notification_count'],
+            'tag_name': tag_name[0],
+            'recipes_all': recipes_all
+            }
+    return render(request, 'pages/tag.html', args)
 
 
 def notifications(request):

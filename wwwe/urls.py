@@ -25,6 +25,7 @@ urlpatterns = [
 
     url(r'^cuisine/(?P<cuisine_id>\w{0,50})/$', pages_views.cuisine, name='cuisine'),
     url(r'^category/(?P<category_id>\w{0,50})/$', pages_views.category, name='category'),
+    url(r'^tag/(?P<tag_id>\w{0,50})/$', pages_views.tag, name='tag'),
 
 
     url(r'^recipe/(?P<recipe_id>\w{0,50})/$', recipe_views.recipe, name='recipe'),
