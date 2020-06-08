@@ -179,8 +179,26 @@ var mainjs = {
             });
         }
 
-    }
+    },
 
+    follow_user:function (token, target_username) {
+
+        let token_g = "Token " + token;
+        let csrftoken = Cookies.get('csrftoken');
+
+        $.ajax({
+        url: 'http://127.0.0.1:8000/api/follow_user/',
+        type: 'POST',
+        headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+        data: {
+            'target_username': target_username
+        },
+        success: function (data) {
+
+           location.reload();
+        }
+        });
+    }
 };
 
 $( document ).ready(function() {

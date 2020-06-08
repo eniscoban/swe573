@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from account.models import Account
+from account.models import Account, Follower
 from .forms import GeneralSettingsForm, PassSettingsForm
 from django.urls import reverse
 from django.contrib import messages
@@ -15,33 +15,25 @@ from rest_framework.authtoken.models import Token
 def home(request):
 
     if request.user.is_authenticated:
-        uDetails = userDetails(request)
 
         args = {'title': "Home Title",
                 'left_menu_selected': 'feed',
-                'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name'],
-                'profile_photo': uDetails['profile_photo'],
-                'my_recipe_count': uDetails['recipe_count'],
-                'my_notification_count': uDetails['notification_count'],
+                'uDetails': userDetails(request)
                 }
         return render(request, 'pages/home.html', args)
     else:
         return HttpResponseRedirect(reverse('user_login'))
 
+
 def create_recipe(request):
     categories = Category.objects.all()
     cuisines = Cuisine.objects.all()
     token, _ = Token.objects.get_or_create(user=request.user)
-    uDetails = userDetails(request)
+
 
 
     args = {'title': "Create Recipe",
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count'],
+            'uDetails': userDetails(request),
             'categories': categories,
             'cuisines': cuisines,
             'token':token
@@ -95,33 +87,25 @@ def create_recipe_ajax(request):
 
 def my_recipes(request):
 
-    uDetails = userDetails(request)
+
     recipes_all = Recipe.objects.filter(recipe_user=request.user.id).order_by('-id')
 
     args = {'title': "My Recipe",
             'left_menu_selected': 'my_recipes',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count'],
+            'uDetails': userDetails(request),
             'recipes_all': recipes_all
             }
     return render(request, 'pages/my_recipes.html', args)
 
 
 def cuisine(request, cuisine_id):
-    uDetails = userDetails(request)
+
     recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
     cuis = Cuisine.objects.get(id=cuisine_id)
 
     args = {'title': "My Recipe",
             'left_menu_selected': '',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count'],
+            'uDetails': userDetails(request),
             'cuisine_name': cuis.cuisine_name,
             'recipes_all': recipes_all
             }
@@ -130,17 +114,12 @@ def cuisine(request, cuisine_id):
 
 def category(request, category_id):
 
-    uDetails = userDetails(request)
     recipes_all = Recipe.objects.filter(recipe_category=category_id).order_by('-id')
     cat = Category.objects.get(id=category_id)
 
     args = {'title': "My Recipe",
             'left_menu_selected': '',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count'],
+            'uDetails': userDetails(request),
             'category_name': cat.category_name,
             'recipes_all': recipes_all
             }
@@ -148,8 +127,6 @@ def category(request, category_id):
 
 
 def tag(request, tag_id):
-
-    uDetails = userDetails(request)
 
     tag_recipeid = Tags.objects.filter(tag_tid=tag_id)
 
@@ -163,11 +140,7 @@ def tag(request, tag_id):
 
     args = {'title': "",
             'left_menu_selected': '',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count'],
+            'uDetails': userDetails(request),
             'tag_name': tag_name[0],
             'recipes_all': recipes_all
             }
@@ -175,14 +148,10 @@ def tag(request, tag_id):
 
 
 def notifications(request):
-    uDetails = userDetails(request)
+
     args = {'title': "Notifications",
             'left_menu_selected': 'notifications',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count']
+            'uDetails': userDetails(request)
             }
     return render(request, 'pages/notifications.html', args)
 
@@ -233,17 +202,10 @@ def settings_email(request):
 
         return HttpResponseRedirect(reverse('settings_email'))
     else:
-        uDetails = userDetails(request)
-
 
         args = {'title': "Settings",
                 'left_menu_selected': 'settings',
-                'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name'],
-                'email_address': uDetails['email_address'],
-                'profile_photo': uDetails['profile_photo'],
-                'my_recipe_count': uDetails['recipe_count'],
-                'my_notification_count': uDetails['notification_count'],
+                'uDetails': userDetails(request)
                 }
         return render(request, 'pages/settings_email.html', args)
 
@@ -265,15 +227,10 @@ def settings_password(request):
 
         return HttpResponseRedirect(reverse('settings_password'))
     else:
-        uDetails = userDetails(request)
 
         args = {'title': "Change Password",
                 'left_menu_selected': 'settings',
-                'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name'],
-                'profile_photo': uDetails['profile_photo'],
-                'my_recipe_count': uDetails['recipe_count'],
-                'my_notification_count': uDetails['notification_count'],
+                'uDetails': userDetails(request)
 
                 }
         return render(request, 'pages/settings_password.html', args)
@@ -289,24 +246,49 @@ def settings(request):
         uDetails = userDetails(request)
 
         form = GeneralSettingsForm(user_name=uDetails['user_name'], gender=uDetails['gender'],
-                                   birth_day=uDetails['birth_day'])
+                                   birth_day=uDetails['birth_day'], about=uDetails['about'])
 
         # create and save token for api
         token, _ = Token.objects.get_or_create(user= request.user)
 
         args = {'title': "Settings",
                 'left_menu_selected': 'settings',
-                'is_auth': uDetails['is_auth'],
-                'user_name': uDetails['user_name'],
-                'birth_day': uDetails['birth_day'],
-                'profile_photo': uDetails['profile_photo'],
-                'gender': uDetails['gender'],
+                'uDetails': uDetails,
                 'token': token,
                 'my_recipe_count': uDetails['recipe_count'],
                 'my_notification_count': uDetails['notification_count'],
                 'form': form
                 }
         return render(request, 'pages/settings.html', args)
+
+
+def my_followers(request):
+
+    users = Follower.objects.filter(target=request.user)
+    users2_temp = []
+    for each in users:
+        each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
+        users2_temp.append(each)
+
+    args = {'title': "My Followers",
+            'left_menu_selected': 'followers',
+            'uDetails': userDetails(request),
+            'users': users2_temp
+            }
+    print(users)
+
+
+    return render(request, 'pages/my_followers.html', args)
+
+
+def my_followings(request):
+    args = {'title': "My Followings",
+            'left_menu_selected': 'followings',
+            'uDetails': userDetails(request),
+            'users': Follower.objects.filter(follower=request.user)
+            }
+    return render(request, 'pages/my_followings.html', args)
+
 
 
 def validate_username(request):

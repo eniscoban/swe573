@@ -27,6 +27,8 @@ def recipe(request, recipe_id):
             'user_name': uDetails['user_name'],
             'profile_photo': uDetails['profile_photo'],
             'recipe_id': recipe_id,
+            'recipe_user': recipeDetails.recipe_user.username,
+            'recipe_user_profile_photo': recipeDetails.recipe_user.profile_photo,
             'recipe_name': recipeDetails.recipe_name,
             'recipe_description': recipeDetails.recipe_description,
             'recipe_category': recipeDetails.recipe_category,

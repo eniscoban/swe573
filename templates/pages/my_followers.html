@@ -12,9 +12,15 @@
 
             <div class="kt-portlet kt-portlet--mobile">
                 <div class="kt-portlet__body">
-                    <h2 >Notifications</h2>
+                    <h2 >My Followers</h2>
                 </div>
             </div>
+
+            {% for each in users %}
+                {% include "inc/followers.html" %}
+            {% endfor %}
+
+
 
         </div>
 

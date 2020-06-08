@@ -33,20 +33,26 @@ class GeneralSettingsForm(forms.ModelForm):
         self.user_name = kwargs.pop('user_name', '')
         self.gender = kwargs.pop('gender', '')
         self.birth_day = kwargs.pop('birth_day', '')
+        self.about = kwargs.pop('about', '')
 
         super(GeneralSettingsForm, self).__init__(*args, **kwargs)
 
         self.fields['username'].widget = forms.TextInput(
             attrs={'value': self.user_name, 'class': 'form-control', 'placeholder': 'Username'})
+
         self.fields['gender'].initial = self.gender
         self.fields['date_birth'].widget = forms.DateInput(
             attrs={'type': 'date', 'value': self.birth_day, 'class': 'form-control', 'placeholder': 'Birth Day'})
         self.fields['username_hidden'].widget = forms.HiddenInput(attrs={'value': self.user_name})
+        self.fields['about'].widget = forms.Textarea(
+            attrs={'rows':"3", 'class': 'form-control', 'placeholder': 'About yourself'})
+        self.fields['about'].initial = self.about
+
 
     class Meta:
         model = Account
         CHOICES = (('Female', 'Female',), ('Male', 'Male',))
-        fields = ['username', 'date_birth', 'gender']
+        fields = ['username', 'date_birth', 'gender', 'about']
 
         widgets = {
             'date_birth': forms.DateInput(

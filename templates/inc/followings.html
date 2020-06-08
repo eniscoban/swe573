@@ -1,0 +1,18 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+ {% load static %}
+        <div class="row">
+            <div class="col-md-8">
+                <span class="kt-userpic kt-userpic--circle  mr-2">
+                    <img src="{% static 'profile_photos/' %}{{ each.target.profile_photo }}" alt="image">
+                </span> <a href="/user/{{ each.target.username }}/">{{ each.target.username }}</a></div>
+            <div class="col-md-4 text-right">
+                <a href="#" class="btn btn-secondary">Unfollow</a>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

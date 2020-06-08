@@ -3,13 +3,13 @@
  {% load static %}
         <div class="ortala div120">
             <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
-                <div class="kt-avatar__holder" style=" background-size: cover; background-image: url({% static 'profile_photos/' %}{{ profile_photo }});"></div>
+                <div class="kt-avatar__holder" style="background-size: cover; background-image: url({% static 'profile_photos/' %}{{ uDetails.profile_photo }});"></div>
 
             </div>
 
         </div>
 
-        <div class="text-center h4">{{ user_name }}</div>
+        <div class="text-center h4">{{ uDetails.user_name }}</div>
 
         <div class="mt-3">
             <ul class="kt-nav kt-nav--md-space">
@@ -26,20 +26,42 @@
                         <i class="kt-nav__link-icon fa fa-concierge-bell"></i>
                         <span class="kt-nav__link-text">My Recipes</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--success">{{ my_recipe_count }}</span>
+                            <span class="kt-badge kt-badge--success">{{ uDetails.recipe_count }}</span>
                         </span>
                     </a>
                 </li>
 
-                  <li class="kt-nav__item {% if left_menu_selected == 'notifications' %}active{% endif %}">
+
+                <li class="kt-nav__item {% if left_menu_selected == 'followers' %}active{% endif %}">
+                    <a href="/my_followers/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-users"></i>
+                        <span class="kt-nav__link-text">My Followers</span>
+                         <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--success">{{ uDetails.my_follower_count }}</span>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="kt-nav__item {% if left_menu_selected == 'followings' %}active{% endif %}">
+                    <a href="/my_followings/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-users"></i>
+                        <span class="kt-nav__link-text">My Followings</span>
+                         <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--success">{{ uDetails.my_following_count }}</span>
+                        </span>
+                    </a>
+                </li>
+
+             <li class="kt-nav__item {% if left_menu_selected == 'notifications' %}active{% endif %}">
                     <a href="/notifications/" class="kt-nav__link">
                         <i class="kt-nav__link-icon fa fa-bell"></i>
                         <span class="kt-nav__link-text">Notifications</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--warning">{{ my_notification_count }}</span>
+                            <span class="kt-badge kt-badge--warning">{{ uDetails.notification_count }}</span>
                         </span>
                     </a>
                 </li>
+
 
 
                 <li class="kt-nav__separator"></li>

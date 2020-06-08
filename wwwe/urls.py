@@ -18,14 +18,20 @@ urlpatterns = [
     path('', pages_views.home, name='home'),
     path('create_recipe/', pages_views.create_recipe, name='create_recipe'),
     path('my_recipes/', pages_views.my_recipes, name='my_recipes'),
+    path('my_followers/', pages_views.my_followers, name='my_followers'),
+    path('my_followings/', pages_views.my_followings, name='my_followings'),
     path('notifications/', pages_views.notifications, name='notifications'),
     path('settings/', pages_views.settings, name='settings'),
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
 
+
+
     url(r'^cuisine/(?P<cuisine_id>\w{0,50})/$', pages_views.cuisine, name='cuisine'),
     url(r'^category/(?P<category_id>\w{0,50})/$', pages_views.category, name='category'),
     url(r'^tag/(?P<tag_id>\w{0,50})/$', pages_views.tag, name='tag'),
+    url(r'^user/(?P<user_name>\w{0,50})/$', account_views.userPage, name='userPage'),
+
 
 
     url(r'^recipe/(?P<recipe_id>\w{0,50})/$', recipe_views.recipe, name='recipe'),

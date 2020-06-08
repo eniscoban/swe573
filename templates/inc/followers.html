@@ -1,0 +1,22 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+ {% load static %}
+        <div class="row">
+            <div class="col-md-8">
+                <span class="kt-userpic kt-userpic--circle  mr-2">
+                    <img src="{% static 'profile_photos/' %}{{ each.follower.profile_photo }}" alt="image">
+                </span> <a href="/user/{{ each.follower.username }}/">{{ each.follower.username }}</a></div>
+            <div class="col-md-4 text-right">
+                {% if each.follower.is_following_by_me == 1 %}
+                    <a href="#" class="btn btn-secondary">Unfollow</a>
+                {% else %}
+                   <a href="#" class="btn btn-primary">Follow</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

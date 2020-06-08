@@ -48,6 +48,7 @@ class Account(AbstractBaseUser):
     email_temp = models.EmailField(max_length=100, null=True, default=False, verbose_name="email_temp")
     email_temp_hash = models.CharField(max_length=200, default='', verbose_name="email_temp_hash")
     token = models.CharField(max_length=200, default='', verbose_name="token")
+    about = models.TextField(blank=True)
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -67,3 +68,9 @@ class Account(AbstractBaseUser):
         return True
 
 
+class Follower(models.Model):
+    follower = models.ForeignKey(Account, related_name='target', null=True,  on_delete=models.SET_NULL)
+    target = models.ForeignKey(Account, related_name='follower', null=True,  on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.follower.username + " -> " + self.target.username

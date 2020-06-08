@@ -7,6 +7,9 @@ urlpatterns = [
     path('create_recipe/', views.create_recipe, name='create_recipe'),
     path('add_comment/', views.add_comment, name='add_comment'),
 
+    path('follow_user/', views.follow_user, name='follow_user'),
+    path('unfollow_user/', views.unfollow_user, name='unfollow_user'),
+
 
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
