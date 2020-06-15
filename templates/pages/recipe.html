@@ -111,7 +111,7 @@
                                 <div class="input-group">
                                     <input type="text" id="comment" name="comment" class="form-control" placeholder="Your comment...">
                                     <div class="input-group-append">
-                                        <button onclick="addComment(); return false;" class="btn btn-primary" type="button">Send</button>
+                                        <button onclick="mainjs.addComment('{{ token }}', {{ recipe_id }}); return false;" class="btn btn-primary" type="button">Send</button>
                                     </div>
                                 </div>
                             </div>
@@ -144,30 +144,7 @@
 <script>
 
 
-function addComment(){
 
-   let comment = $("#comment").val();
-
-   let csrftoken = Cookies.get('csrftoken');
-
-   if(comment.length >= 3){
-
-        $.ajax({
-        url: 'http://127.0.0.1:8000/api/add_comment/',
-        type: 'POST',
-        headers: { 'X-CSRFToken': csrftoken,  'Authorization': 'Token {{ token }}'  },
-        data: {
-            'comment': comment,
-            'recipe_id': {{ recipe_id }}
-        },
-        success: function (data) {
-
-           location.reload();
-        }
-        });
-   }
-
-}
 
 jQuery(document).ready(function() {
 

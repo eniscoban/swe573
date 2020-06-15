@@ -191,11 +191,7 @@ def unfollow_user(request):
 
     target = Account.objects.get(username=target_username)
 
-    newFollow = Follower(
-        target=target,
-        follower=user
-    )
-    newFollow.save(force_insert=True)
+    Follower.objects.filter(target=target, follower=user).delete()
 
     data = {
         'success': True

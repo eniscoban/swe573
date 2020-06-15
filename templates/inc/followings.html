@@ -3,12 +3,15 @@
  {% load static %}
         <div class="row">
             <div class="col-md-8">
-                <span class="kt-userpic kt-userpic--circle  mr-2">
+                <div class="kt-userpic kt-userpic--circle mr-2 float-left">
                     <img src="{% static 'profile_photos/' %}{{ each.target.profile_photo }}" alt="image">
-                </span> <a href="/user/{{ each.target.username }}/">{{ each.target.username }}</a></div>
-            <div class="col-md-4 text-right">
-                <a href="#" class="btn btn-secondary">Unfollow</a>
+                </div>
+                <div class="mt-1">
+                    <div><a href="/user/{{ each.target.username }}/" class="font-weight-bold">{{ each.target.username }}</a></div>
+                    <div class="">{{ each.extra }}</div>
+                </div>
             </div>
+
 
         </div>
 

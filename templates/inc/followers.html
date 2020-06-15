@@ -3,15 +3,14 @@
  {% load static %}
         <div class="row">
             <div class="col-md-8">
-                <span class="kt-userpic kt-userpic--circle  mr-2">
+                <div class="kt-userpic kt-userpic--circle mr-2 float-left">
                     <img src="{% static 'profile_photos/' %}{{ each.follower.profile_photo }}" alt="image">
-                </span> <a href="/user/{{ each.follower.username }}/">{{ each.follower.username }}</a></div>
-            <div class="col-md-4 text-right">
-                {% if each.follower.is_following_by_me == 1 %}
-                    <a href="#" class="btn btn-secondary">Unfollow</a>
-                {% else %}
-                   <a href="#" class="btn btn-primary">Follow</a>
-                {% endif %}
+                </div>
+                <div class="mt-1">
+                    <div><a href="/user/{{ each.follower.username }}/" class="font-weight-bold">{{ each.follower.username }}</a></div>
+                    <div class="">{{ each.extra }}</div>
+                </div>
+
             </div>
 
         </div>

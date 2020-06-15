@@ -181,6 +181,31 @@ var mainjs = {
 
     },
 
+    addComment:function(token,recipe_id){
+
+       let comment = $("#comment").val();
+       let token_g = "Token " + token;
+       let csrftoken = Cookies.get('csrftoken');
+
+       if(comment.length >= 3){
+
+            $.ajax({
+            url: 'http://127.0.0.1:8000/api/add_comment/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+                'comment': comment,
+                'recipe_id': recipe_id
+            },
+            success: function (data) {
+
+               location.reload();
+            }
+            });
+       }
+
+    },
+
     follow_user:function (token, target_username) {
 
         let token_g = "Token " + token;
@@ -198,7 +223,25 @@ var mainjs = {
            location.reload();
         }
         });
-    }
+    },
+    unfollow_user:function (token, target_username) {
+
+        let token_g = "Token " + token;
+        let csrftoken = Cookies.get('csrftoken');
+
+        $.ajax({
+        url: 'http://127.0.0.1:8000/api/unfollow_user/',
+        type: 'POST',
+        headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+        data: {
+            'target_username': target_username
+        },
+        success: function (data) {
+
+           location.reload();
+        }
+        });
+    },
 };
 
 $( document ).ready(function() {

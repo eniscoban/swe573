@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^category/(?P<category_id>\w{0,50})/$', pages_views.category, name='category'),
     url(r'^tag/(?P<tag_id>\w{0,50})/$', pages_views.tag, name='tag'),
     url(r'^user/(?P<user_name>\w{0,50})/$', account_views.userPage, name='userPage'),
-
+    url(r'^user/(?P<user_name>\w{0,50})/followers/$', account_views.userFollowers, name='userFollowers'),
 
 
     url(r'^recipe/(?P<recipe_id>\w{0,50})/$', recipe_views.recipe, name='recipe'),

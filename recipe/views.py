@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 
 def recipe(request, recipe_id):
-    uDetails = userDetails(request)
+
     recipeDetails = Recipe.objects.get(id=recipe_id)
     ingredients = Ingredient.objects.filter(recipe_id=recipe_id)
     comments = Comments.objects.filter(recipe_id=recipe_id).order_by('-id')
@@ -23,9 +23,7 @@ def recipe(request, recipe_id):
 
     args = {'title': "Recipe",
             'left_menu_selected': '',
-            'is_auth': uDetails['is_auth'],
-            'user_name': uDetails['user_name'],
-            'profile_photo': uDetails['profile_photo'],
+            'uDetails': userDetails(request),
             'recipe_id': recipe_id,
             'recipe_user': recipeDetails.recipe_user.username,
             'recipe_user_profile_photo': recipeDetails.recipe_user.profile_photo,
@@ -39,9 +37,8 @@ def recipe(request, recipe_id):
             'nutrients': nutrients,
             'tags': tags,
             'comments': comments,
-            'token': token,
-            'my_recipe_count': uDetails['recipe_count'],
-            'my_notification_count': uDetails['notification_count']
+            'token': token
+
             }
     return render(request, 'pages/recipe.html', args)
 

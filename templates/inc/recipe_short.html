@@ -5,7 +5,7 @@
             <div class="col-md-8">
                 <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
                     <img src="{% static 'profile_photos/' %}{{ each.recipe_user.profile_photo }}" alt="image">
-                </span> {{ each.recipe_user.username }}</div>
+                </span> <a href="/user/{{ each.recipe_user.username }}/">{{ each.recipe_user.username }}</a></div>
             <div class="col-md-4 text-right">{{ each.added_date }}</div>
 
         </div>

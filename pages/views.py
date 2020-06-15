@@ -267,7 +267,12 @@ def my_followers(request):
     users = Follower.objects.filter(target=request.user)
     users2_temp = []
     for each in users:
-        each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
+        #each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
+
+        follower_count = Follower.objects.filter(target=each.follower).count()
+        recipe_count = Recipe.objects.filter(recipe_user=each.follower).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         users2_temp.append(each)
 
     args = {'title': "My Followers",
@@ -275,17 +280,25 @@ def my_followers(request):
             'uDetails': userDetails(request),
             'users': users2_temp
             }
-    print(users)
-
 
     return render(request, 'pages/my_followers.html', args)
 
 
 def my_followings(request):
+    users = Follower.objects.filter(follower=request.user)
+    users2_temp = []
+    for each in users:
+
+        follower_count = Follower.objects.filter(target=each.target).count()
+        recipe_count = Recipe.objects.filter(recipe_user=each.target).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
+        users2_temp.append(each)
+
     args = {'title': "My Followings",
             'left_menu_selected': 'followings',
             'uDetails': userDetails(request),
-            'users': Follower.objects.filter(follower=request.user)
+            'users': users2_temp
             }
     return render(request, 'pages/my_followings.html', args)
 
