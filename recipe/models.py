@@ -72,3 +72,12 @@ class Comments(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class Likes(models.Model):
+    like_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
+    recipe_id = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
+    added_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.like_user.username

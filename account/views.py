@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from .models import Account, Follower
-from recipe.models import Recipe
+from recipe.models import Recipe, Likes, Comments
 from rest_framework.authtoken.models import Token
 
 
@@ -130,13 +130,20 @@ def userPage(request, user_name,  *args, **kwargs):
         recipes_all = Recipe.objects.filter(recipe_user=otheruser.id).order_by('-id')
         is_following_by_me = Follower.objects.filter(follower=request.user, target=otheruser).count()
 
+        recipes_all_temp = []
+        for each in recipes_all:
+            each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+            each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+            each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+            recipes_all_temp.append(each)
+
         args = {
                 'uDetails': userDetails(request),
                 'otheruser': otheruser,
                 'otheruser_recipe_count': Recipe.objects.filter(recipe_user=otheruser.id).count(),
                 'otheruser_follower_count': Follower.objects.filter(target=otheruser.id).count(),
                 'is_following_by_me' : is_following_by_me,
-                'recipes_all': recipes_all
+                'recipes_all': recipes_all_temp
                 }
         return render(request, 'pages/user_page.html', args)
 

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.status import HTTP_400_BAD_REQUEST
-from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments, Likes
 from account.models import Account, Follower
 from api.serializers import RecipeSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -192,6 +192,43 @@ def unfollow_user(request):
     target = Account.objects.get(username=target_username)
 
     Follower.objects.filter(target=target, follower=user).delete()
+
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def like_recipe(request):
+
+    user = Token.objects.get(key=request.auth).user
+    recipe_id = request.data['recipe_id']
+    recipe = Recipe.objects.get(id=recipe_id)
+
+    newLike = Likes(
+        like_user=user,
+        recipe_id=recipe,
+        added_date=datetime.datetime.now()
+    )
+    newLike.save(force_insert=True)
+
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def unlike_recipe(request):
+
+    user = Token.objects.get(key=request.auth).user
+    recipe_id = request.data['recipe_id']
+    recipe = Recipe.objects.get(id=recipe_id)
+
+    Likes.objects.filter(recipe_id=recipe, like_user=user).delete()
 
     data = {
         'success': True

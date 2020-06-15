@@ -1,7 +1,7 @@
 from django.db.models import Sum,Count
 from django.shortcuts import render
 from account.views import userDetails
-from recipe.models import Recipe, Ingredient, Nutrients, Tags, Comments
+from recipe.models import Recipe, Ingredient, Nutrients, Tags, Comments, Likes
 from rest_framework.authtoken.models import Token
 
 
@@ -11,6 +11,8 @@ def recipe(request, recipe_id):
     recipeDetails = Recipe.objects.get(id=recipe_id)
     ingredients = Ingredient.objects.filter(recipe_id=recipe_id)
     comments = Comments.objects.filter(recipe_id=recipe_id).order_by('-id')
+    like_count = Likes.objects.filter(recipe_id=recipe_id).count()
+    liked = Likes.objects.filter(recipe_id=recipe_id, like_user=request.user).count()
 
     nutrients = Nutrients.objects.filter(recipe_id=recipe_id)\
         .values('nutrient_name', 'nutrient_unit')\
@@ -37,6 +39,8 @@ def recipe(request, recipe_id):
             'nutrients': nutrients,
             'tags': tags,
             'comments': comments,
+            'like_count': like_count,
+            'liked': liked,
             'token': token
 
             }

@@ -20,8 +20,18 @@
         <div class="kt-separator kt-separator--space-md kt-separator--border-dashed"></div>
 
         <div class="row">
-            <i class="la la-heart-o h3 float-left mr-2"></i> <div class="h5 pt-1 float-left mr-5">5</div>
-            <i class="la la-comment h3 float-left mr-2"></i> <div class="h5 pt-1">2</div>
+
+
+            {% if each.liked == 0 %}
+                 <i class="la la-heart-o h3 float-left mr-2"></i>
+             {% else %}
+                 <i class="la la-heart kt-font-danger h3 float-left mr-2"></i>
+             {% endif %} <div class="h5 pt-1 float-left mr-4">{{ each.like_count }}</div>
+
+
+            <i class="la la-comment h3 float-left mr-2"></i> <div class="h5 pt-1">{{ each.comment_count }}</div>
+
+
 
         </div>
 

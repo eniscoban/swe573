@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 import datetime, random, hashlib
 from random import random
-from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags, Comments, Likes
 from account.views import userDetails
 from rest_framework.authtoken.models import Token
 
@@ -87,13 +87,19 @@ def create_recipe_ajax(request):
 
 def my_recipes(request):
 
-
     recipes_all = Recipe.objects.filter(recipe_user=request.user.id).order_by('-id')
+    recipes_all_temp = []
+    for each in recipes_all:
+
+        each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+        each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+        each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+        recipes_all_temp.append(each)
 
     args = {'title': "My Recipe",
             'left_menu_selected': 'my_recipes',
             'uDetails': userDetails(request),
-            'recipes_all': recipes_all
+            'recipes_all': recipes_all_temp
             }
     return render(request, 'pages/my_recipes.html', args)
 

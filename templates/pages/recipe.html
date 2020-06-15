@@ -81,8 +81,6 @@
                                          <td style="width: 120px" class="text-right">{{ each.dcount|floatformat:2 }} {{ each.nutrient_unit }}</td>
                                      </tr>
                                      {% endfor %}
-
-
                                  </table>
 
 
@@ -94,6 +92,20 @@
                          </div>
                     </div>
 
+
+                    <div class="kt-separator kt-separator--space-md kt-separator--border-dashed"></div>
+
+                     <div class="row">
+
+                         {% if liked == 0 %}
+                             <a href="#" onclick="mainjs.like_recipe('{{ token }}', {{ recipe_id }}); return false;"><i class="la la-heart-o h3 float-left mr-2"></i></a>
+                         {% else %}
+                             <a href="#" onclick="mainjs.unlike_recipe('{{ token }}', {{ recipe_id }}); return false;"><i class="la la-heart kt-font-danger h3 float-left mr-2"></i></a>
+                         {% endif %}
+
+
+                         <div class="h5 pt-1">{{ like_count }} </div>
+                    </div>
 
 
                 </div>
@@ -142,7 +154,6 @@
 
 
 <script>
-
 
 
 

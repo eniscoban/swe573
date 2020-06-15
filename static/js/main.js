@@ -230,18 +230,68 @@ var mainjs = {
         let csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
-        url: 'http://127.0.0.1:8000/api/unfollow_user/',
-        type: 'POST',
-        headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
-        data: {
-            'target_username': target_username
-        },
-        success: function (data) {
+            url: 'http://127.0.0.1:8000/api/unfollow_user/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+                'target_username': target_username
+            },
+            success: function (data) {
 
-           location.reload();
-        }
+               location.reload();
+            }
         });
     },
+
+
+
+    like_recipe:function(token,recipe_id){
+       let token_g = "Token " + token;
+       let csrftoken = Cookies.get('csrftoken');
+
+       $.ajax({
+            url: 'http://127.0.0.1:8000/api/like_recipe/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+                'recipe_id': recipe_id
+            },
+            success: function (data) {
+
+               location.reload();
+            }
+       });
+    },
+
+    unlike_recipe:function(token,recipe_id){
+       let token_g = "Token " + token;
+       let csrftoken = Cookies.get('csrftoken');
+
+       $.ajax({
+            url: 'http://127.0.0.1:8000/api/unlike_recipe/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+                'recipe_id': recipe_id
+            },
+            success: function (data) {
+
+               location.reload();
+            }
+       });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 };
 
 $( document ).ready(function() {
