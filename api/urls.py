@@ -12,6 +12,8 @@ urlpatterns = [
     path('follow_user/', views.follow_user, name='follow_user'),
     path('unfollow_user/', views.unfollow_user, name='unfollow_user'),
 
+    path('create_foodprovider/', views.create_foodprovider, name='create_foodprovider'),
+
 
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),

@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'api',
     'account',
     'pages',
-    'recipe'
+    'recipe',
+    'foodproviders'
 ]
 
 MIDDLEWARE = [

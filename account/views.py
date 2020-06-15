@@ -7,6 +7,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from .models import Account, Follower
 from recipe.models import Recipe, Likes, Comments
+from foodproviders.models import FoodProviders
 from rest_framework.authtoken.models import Token
 
 
@@ -88,6 +89,7 @@ def userDetails(request):
         notification_count = 0
         my_follower_count = Follower.objects.filter(target=request.user.id).count()
         my_following_count = Follower.objects.filter(follower=request.user.id).count()
+        providers = FoodProviders.objects.filter(provider_user=request.user.id)
     else:
         is_auth = False
         user_name = ""
@@ -102,6 +104,7 @@ def userDetails(request):
         my_follower_count = 0
         my_following_count = 0
         token = ""
+        providers = []
 
     return {'is_auth': is_auth,
             'my_follower_count': my_follower_count,
@@ -115,6 +118,7 @@ def userDetails(request):
             'password': password,
             'profile_photo': profile_photo,
             'about': about,
+            'providers': providers,
             'token': token
             }
 

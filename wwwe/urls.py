@@ -6,7 +6,8 @@ from django.conf.urls import url, include
 from account import views as account_views
 from pages import views as pages_views
 from recipe import views as recipe_views
-from api import views as api_views
+from foodproviders import views as foodprovider_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +25,10 @@ urlpatterns = [
     path('settings/', pages_views.settings, name='settings'),
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
+
+
+    path('become_fp/', foodprovider_views.become_fp, name='become_fp'),
+    url(r'^provider/(?P<provider_id>\w{0,50})/$', foodprovider_views.providerPage, name='providerPage'),
 
 
 
