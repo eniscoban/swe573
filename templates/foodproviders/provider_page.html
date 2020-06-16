@@ -32,21 +32,28 @@
 
                                     <div class="kt-widget__content pl-0" >
                                         <div class="kt-widget__head">
-                                            <a href="/user/{{ provider.provider_name }}/" class="kt-widget__username">
+                                            <a href="/user/{{ provider.provider_name }}/" class="kt-widget__username h2">
                                                 {{ provider.provider_name }}
                                             </a>
                                             <div class="kt-widget__action">
 
-                                                {% if is_following_by_me == 1 %}
-                                                    <a href="#" onclick="mainjs.unfollow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-secondary btn-sm btn-upper">unfollow</a>
+                                                {% if provider.provider_user.username ==  uDetails.user_name  %}
+                                                    <a href="/provider-editmenus/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Edit Menus</a>
+                                                    <a href="/provider-settings/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Settings</a>
                                                 {% else %}
-                                                    <a href="#" onclick="mainjs.follow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-primary btn-sm btn-upper">follow</a>
+                                                    {% if is_following_by_me == 1 %}
+                                                    <a href="#" onclick="mainjs.unfollow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-secondary btn-sm btn-upper">unfollow</a>
+                                                    {% else %}
+                                                        <a href="#" onclick="mainjs.follow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-primary btn-sm btn-upper">follow</a>
+                                                    {% endif %}
                                                 {% endif %}
+
+
 
                                             </div>
                                         </div>
                                         <div class="kt-widget__subhead">
-                                            <div ><i class="fa fa-user-circle mr-1"></i> {{ provider.provider_user.username }}</div>
+                                            <div ><i class="fa fa-user-circle mr-1"></i> <a href="/user/{{ provider.provider_user.username }}/">{{ provider.provider_user.username }}</a></div>
                                             <div ><i class="fa fa-map-marker-alt mr-1"></i> {{ provider.provider_address }}</div>
 
                                         </div>
@@ -63,18 +70,18 @@
                                     <ul class="nav nav-tabs nav-tabs-space-lg nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand"  style="margin-bottom: 0px !important;" role="tablist">
                                         <li class="nav-item">
                                             <a href="/user/{{ otheruser.username }}/" class="nav-link active" aria-selected="false">
-                                                <i class="fa fa-concierge-bell"></i> Recipes ({{ otheruser_recipe_count }})
+                                                <i class="fa fa-concierge-bell"></i> Recipes ({{ provider_recipe_count }})
                                             </a>
                                         </li>
 
                                          <li class="nav-item">
-                                            <a href="/user/{{ otheruser.username }}/" class="nav-link active" aria-selected="false">
-                                                <i class="fa fa-concierge-bell"></i> Menus ({{ otheruser_recipe_count }})
+                                            <a href="/user/{{ otheruser.username }}/" class="nav-link" aria-selected="false">
+                                                <i class="fa fa-concierge-bell"></i> Menus ({{ otheruser_menu_count }})
                                             </a>
                                          </li>
                                          <li class="nav-item">
                                             <a href="/user/{{ otheruser.username }}/followers/" class="nav-link" aria-selected="false">
-                                                <i class="fa fa-users"></i> Followers ({{ otheruser_follower_count }})
+                                                <i class="fa fa-users"></i> Followers ({{ provider_follower_count }})
                                             </a>
                                         </li>
 

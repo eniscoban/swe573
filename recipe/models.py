@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import Account
+from foodproviders.models import FoodProviders
 
 class Cuisine(models.Model):
     cuisine_name = models.CharField(max_length=100)
@@ -18,15 +19,12 @@ class Category(models.Model):
 class Recipe(models.Model):
     recipe_name = models.CharField(max_length=200)
     recipe_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
+    recipe_food_provider = models.ForeignKey(FoodProviders, null=True, blank=True, on_delete=models.SET_NULL)
     recipe_description = models.TextField(blank=True)
     recipe_cuisine = models.ForeignKey(Cuisine, null=True, blank=True, on_delete=models.SET_NULL)
     recipe_category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
 
-    yield_total = models.CharField(max_length=100, default="")
-    calories_total = models.FloatField(default=0.0)
-    weight_total = models.FloatField(default=0.0)
-    healthLabels = models.CharField(max_length=300, default="")
-    cautions = models.CharField(max_length=300, default="")
+
 
     how_many_person = models.IntegerField()
     added_date = models.DateTimeField()

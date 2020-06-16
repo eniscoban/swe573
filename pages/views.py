@@ -8,7 +8,9 @@ from django.core.mail import send_mail
 import datetime, random, hashlib
 from random import random
 from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags, Comments, Likes
+from foodproviders.models import FoodProviders
 from account.views import userDetails
+from foodproviders.views import FoodProviders
 from rest_framework.authtoken.models import Token
 
 
@@ -29,13 +31,13 @@ def create_recipe(request):
     categories = Category.objects.all()
     cuisines = Cuisine.objects.all()
     token, _ = Token.objects.get_or_create(user=request.user)
-
-
+    providers = FoodProviders.objects.filter(provider_user=request.user)
 
     args = {'title': "Create Recipe",
             'uDetails': userDetails(request),
             'categories': categories,
             'cuisines': cuisines,
+            'providers': providers,
             'token':token
             }
     return render(request, 'pages/create_recipe.html', args)

@@ -19,6 +19,17 @@
                 </div>
                 <div class="kt-portlet__body">
 
+
+                    <div class="form-group">
+                        <label>Select User / Food Provider</label>
+                        <select class="form-control" id="user_select" name="user_select">
+                            <option value="0">{{ uDetails.user_name }}</option>
+                            {% for each in  providers %}
+                            <option value="{{ each.id }}">{{ each.provider_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label>Recipe Name</label>
                         <input type="text" class="form-control" name="recipe_name" id="recipe_name"  >
@@ -373,6 +384,7 @@ function addRecipe(){
     let recipe_category = $("#recipe_category").val();
     let recipe_cuisine = $("#recipe_cuisine").val();
     let recipe_serving = $("#recipe_serving").val();
+    let user_select = $("#user_select").val();
 
     let sendData = {
         recipe_name : recipe_name,
@@ -380,6 +392,7 @@ function addRecipe(){
         recipe_category: recipe_category,
         recipe_cuisine: recipe_cuisine,
         recipe_serving: recipe_serving,
+        user_select: user_select,
         tags: JSON.stringify(tags_ready),
         ingredients: JSON.stringify(ingredients_ready),
         nutrients: JSON.stringify(nutrients_ready)

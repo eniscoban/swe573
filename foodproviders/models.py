@@ -13,3 +13,11 @@ class FoodProviders(models.Model):
 
     def __str__(self):
         return self.provider_name
+
+
+class FollowerProvider(models.Model):
+    followerProvider = models.ForeignKey(Account, related_name='targetProvider', null=True,  on_delete=models.SET_NULL)
+    targetProvider = models.ForeignKey(FoodProviders, related_name='followerProvider', null=True,  on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.followerProvider.username + " -> " + self.targetProvider.provider_name

@@ -13,6 +13,7 @@ urlpatterns = [
     path('unfollow_user/', views.unfollow_user, name='unfollow_user'),
 
     path('create_foodprovider/', views.create_foodprovider, name='create_foodprovider'),
+    path('edit_foodprovider/', views.edit_foodprovider, name='edit_foodprovider'),
 
 
     path('login/', views.login, name='login'),

@@ -81,6 +81,7 @@ def create_recipe(request):
 
     user = Token.objects.get(key=request.auth).user
     recipe_name = request.data['recipe_name']
+    user_select = request.data['user_select']
     recipe_description = request.POST.get('recipe_description')
     recipe_category = request.data['recipe_category']
     recipe_cuisine = request.data['recipe_cuisine']
@@ -92,9 +93,16 @@ def create_recipe(request):
     recipe_cuisine1 = Cuisine.objects.get(id=recipe_cuisine)
     recipe_category1 = Category.objects.get(id=recipe_category)
 
+    try:
+        provider = FoodProviders.objects.get(id=user_select)
+    except FoodProviders.DoesNotExist:
+        provider = None
+
+
     newRecipe = Recipe(
         recipe_name=recipe_name,
         recipe_user=user,
+        recipe_food_provider=provider,
         recipe_description=recipe_description,
         recipe_cuisine=recipe_cuisine1,
         recipe_category=recipe_category1,
@@ -264,4 +272,34 @@ def create_foodprovider(request):
             'provider_id': newProviderSec.id,
             'success': True
         }
+    return JsonResponse(data)
+
+@csrf_exempt
+@api_view(["POST"])
+def edit_foodprovider(request):
+    user = Token.objects.get(key=request.auth).user
+
+    provider_id = request.data['provider_id']
+    page_name = request.data['page_name']
+    page_description = request.POST.get('page_description')
+    page_address = request.data['page_address']
+    longitude = request.data['longitude']
+    latitude = request.data['latitude']
+
+
+    prv = FoodProviders.objects.get(id=provider_id)
+
+    prv.provider_name = page_name
+    prv.provider_description = page_description
+    prv.provider_address = page_address
+    prv.provider_lat = longitude
+    prv.provider_long = latitude
+
+    prv.save()
+
+
+    data = {
+        'provider_id': provider_id,
+        'success': True
+    }
     return JsonResponse(data)

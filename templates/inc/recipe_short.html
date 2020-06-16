@@ -3,9 +3,23 @@
  {% load static %}
         <div class="row">
             <div class="col-md-8">
-                <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
-                    <img src="{% static 'profile_photos/' %}{{ each.recipe_user.profile_photo }}" alt="image">
-                </span> <a href="/user/{{ each.recipe_user.username }}/">{{ each.recipe_user.username }}</a></div>
+
+                {% if each.recipe_food_provider == Null %}
+                    <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
+                        <img src="{% static 'profile_photos/' %}{{ each.recipe_user.profile_photo }}" alt="image">
+                    </span>
+                    <a href="/user/{{ each.recipe_user.username }}/">{{ each.recipe_user.username }}</a>
+                {% else %}
+                    <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
+
+                        <i class="fa fa-map-marker-alt kt-font-dark" style="font-size:24px"></i>
+                    </span>
+                    <a href="/provider/{{ each.recipe_food_provider.id }}/">{{ each.recipe_food_provider.provider_name }}</a>
+                    (<a href="/user/{{ each.recipe_user.username }}/">{{ each.recipe_user.username }}</a>)
+                {% endif %}
+
+
+            </div>
             <div class="col-md-4 text-right">{{ each.added_date }}</div>
 
         </div>
