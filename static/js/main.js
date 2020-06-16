@@ -279,11 +279,47 @@ var mainjs = {
                location.reload();
             }
        });
-    }
+    },
 
 
 
 
+    follow_provider:function (token, target_provider) {
+
+        let token_g = "Token " + token;
+        let csrftoken = Cookies.get('csrftoken');
+
+        $.ajax({
+        url: 'http://127.0.0.1:8000/api/follow_provider/',
+        type: 'POST',
+        headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+        data: {
+            'target_provider': target_provider
+        },
+        success: function (data) {
+
+           location.reload();
+        }
+        });
+    },
+    unfollow_provider:function (token, target_provider) {
+
+        let token_g = "Token " + token;
+        let csrftoken = Cookies.get('csrftoken');
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/unfollow_provider/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+                'target_provider': target_provider
+            },
+            success: function (data) {
+
+               location.reload();
+            }
+        });
+    },
 
 
 

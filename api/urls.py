@@ -20,7 +20,8 @@ urlpatterns = [
     path('addToMenu/', views.addToMenu, name='addToMenu'),
     path('removeFromMenu/', views.removeFromMenu, name='removeFromMenu'),
 
-
+    path('follow_provider/', views.follow_provider, name='follow_provider'),
+    path('unfollow_provider/', views.unfollow_provider, name='unfollow_provider'),
 
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),

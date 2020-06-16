@@ -93,3 +93,30 @@ def providerSettings(request, provider_id,  *args, **kwargs):
             'uDetails': userDetails(request)
             }
     return render(request, 'foodproviders/settings.html', args)
+
+
+def providerFollowers(request, provider_id,  *args, **kwargs):
+    provider = FoodProviders.objects.get(id=provider_id)
+    is_following_by_me = FollowerProvider.objects.filter(followerProvider=request.user, targetProvider=provider).count()
+    token, _ = Token.objects.get_or_create(user=request.user)
+
+    users = FollowerProvider.objects.filter(targetProvider=provider_id)
+    users2_temp = []
+    for each in users:
+        follower_count = Follower.objects.filter(target=each.followerProvider).count()
+        recipe_count = Recipe.objects.filter(recipe_user=each.followerProvider).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
+        users2_temp.append(each)
+
+    args = {
+        'uDetails': userDetails(request),
+        'provider': provider,
+        'provider_recipe_count': Recipe.objects.filter(recipe_food_provider=provider.id).count(),
+        'otheruser_menu_count': Menus.objects.filter(menu_provider=provider).count(),
+        'provider_follower_count': FollowerProvider.objects.filter(targetProvider=provider.id).count(),
+        'is_following_by_me': is_following_by_me,
+        'users': users2_temp,
+        'token': token
+    }
+    return render(request, 'foodproviders/provider_followers.html', args)

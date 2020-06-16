@@ -35,6 +35,7 @@ def recipe(request, recipe_id):
             'recipe_cuisine': recipeDetails.recipe_cuisine,
             'recipe_added_date': recipeDetails.added_date,
             'recipe_how_many_person': recipeDetails.how_many_person,
+            'recipe_food_provider': recipeDetails.recipe_food_provider,
             'ingredients': ingredients,
             'nutrients': nutrients,
             'tags': tags,

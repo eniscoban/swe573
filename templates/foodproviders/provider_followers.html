@@ -74,12 +74,12 @@
                                         </li>
 
                                          <li class="nav-item">
-                                            <a href="/provider/{{ provider.id }}/menus/" class="nav-link active" aria-selected="false">
+                                            <a href="/provider/{{ provider.id }}/menus/" class="nav-link " aria-selected="false">
                                                 <i class="fa fa-clipboard-list"></i> Menus ({{ otheruser_menu_count }})
                                             </a>
                                          </li>
                                          <li class="nav-item">
-                                            <a href="/provider/{{ provider.id }}/followers/" class="nav-link" aria-selected="false">
+                                            <a href="/provider/{{ provider.id }}/followers/" class="nav-link active" aria-selected="false">
                                                 <i class="fa fa-users"></i> Followers ({{ provider_follower_count }})
                                             </a>
                                         </li>
@@ -118,51 +118,9 @@
                     </div>
                     {% endif %}
 
-                    {% for each in menus_all %}
+                    {% for each in users %}
 
-                        <div class="kt-portlet kt-portlet--tab">
-                            <div class="kt-portlet__head">
-                                <div class="kt-portlet__head-label">
-                                     <h3 class="kt-portlet__head-title">{{ each.menu_name }}</h3>
-                                </div>
-                                {% if uDetails.user_name == provider.provider_user.username %}
-                                <div class="kt-portlet__head-toolbar">
-                                    <div class="input-group">
-                                        <select class="form-control" id="menu_add_{{ each.id }}">
-                                            {% for inc in each.other_recipes %}
-                                            <option value="{{ inc.id }}">{{ inc.recipe_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="input-group-append">
-                                            <a class="btn btn-warning" href="#" onclick="addToMenu({{ each.id }}); return false;" >Add</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="kt-portlet__body">
-
-                                <div class="kt-widget4">
-                                    {% for inc in each.recipes %}
-                                        <div class="kt-widget4__item">
-                                            <div class="kt-widget4__info"><a href="/recipe/{{ inc.recipe_id.id }}">{{ inc.recipe_id.recipe_name }}</a></div>
-
-                                            {% if uDetails.user_name == provider.provider_user.username %}
-                                            <a href="#" onclick="removeFromMenu({{ each.id }},{{ inc.recipe_id.id }}); return false;" class="btn btn-sm btn-label-brand btn-bold"><i class="fa fa-trash-alt"></i></a>
-                                            {% endif %}
-
-                                        </div>
-                                    {% endfor %}
-
-
-                                </div>
-
-
-
-                            </div>
-                        </div>
-
-
+                       {% include "inc/followers_provider.html" %}
 
                     {% endfor %}
 
@@ -186,72 +144,7 @@
 
     var marker = new mapboxgl.Marker().setLngLat([{{ provider.provider_lat }},  {{ provider.provider_long }}]).addTo(map);
 
-    function  createMenu() {
 
-        let menu_name = $("#menu_name").val();
-
-         let sendData = {
-            menu_name : menu_name,
-            food_provider_id: {{ provider.id }}
-        }
-
-         let csrftoken = Cookies.get('csrftoken');
-            $.ajax({
-                url: 'http://127.0.0.1:8000/api/createMenu/',
-                type: 'post',
-                data: sendData,
-                headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-                    location.reload();
-                }
-            });
-
-    }
-
-    function addToMenu(menu_id){
-
-        let mm = "#menu_add_"+menu_id;
-        recipe_id_will_add = $(mm).val();
-
-        let sendData = {
-            menu_id : menu_id,
-            recipe_id_will_add: recipe_id_will_add
-        }
-
-        let csrftoken = Cookies.get('csrftoken');
-        $.ajax({
-            url: 'http://127.0.0.1:8000/api/addToMenu/',
-            type: 'post',
-            data: sendData,
-            headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
-            dataType: 'json',
-            success: function(data) {
-                location.reload();
-            }
-        });
-    }
-
-    function removeFromMenu(menu_id,recipe_id) {
-        let sendData = {
-            menu_id : menu_id,
-            recipe_id_will_remove: recipe_id
-        }
-
-        let csrftoken = Cookies.get('csrftoken');
-        $.ajax({
-            url: 'http://127.0.0.1:8000/api/removeFromMenu/',
-            type: 'post',
-            data: sendData,
-            headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
-            dataType: 'json',
-            success: function(data) {
-                location.reload();
-            }
-        });
-
-    }
 </script>
 
 

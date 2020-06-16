@@ -18,10 +18,26 @@
                 <div class="kt-portlet__body">
 
                     <div class="row">
+
                         <div class="col-md-8">
-                            <span class="kt-userpic kt-userpic--circle  mr-2">
-                                <img src="{% static 'profile_photos/' %}{{ recipe_user_profile_photo }}" alt="image">
-                            </span > <a href="/user/{{ recipe_user }}/"  style="font-size:18px">{{ recipe_user }}</a> </div>
+
+                            {% if recipe_food_provider == Null %}
+                               <span class="kt-userpic kt-userpic--circle  mr-2">
+                                    <img src="{% static 'profile_photos/' %}{{ recipe_user_profile_photo }}" alt="image">
+                                </span >
+                                <a href="/user/{{ recipe_user }}/"  style="font-size:18px">{{ recipe_user }}</a>
+                            {% else %}
+                                <span class="kt-userpic kt-userpic--circle kt-userpic--sm mr-2">
+
+                                    <i class="fa fa-map-marker-alt kt-font-dark" style="font-size:32px"></i>
+                                </span>
+                                <a href="/provider/{{ recipe_food_provider.id }}/">{{ recipe_food_provider.provider_name }}</a>
+                                (<a href="/user/{{ recipe_user }}/">{{ recipe_user }}</a>)
+                            {% endif %}
+
+                        </div>
+
+
                         <div class="col-md-4 text-right">{{ recipe_added_date }}</div>
 
                     </div>

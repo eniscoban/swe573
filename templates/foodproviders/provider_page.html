@@ -38,13 +38,12 @@
                                             <div class="kt-widget__action">
 
                                                 {% if provider.provider_user.username ==  uDetails.user_name  %}
-                                                    <a href="/provider-editmenus/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Edit Menus</a>
                                                     <a href="/provider-settings/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Settings</a>
                                                 {% else %}
                                                     {% if is_following_by_me == 1 %}
-                                                    <a href="#" onclick="mainjs.unfollow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-secondary btn-sm btn-upper">unfollow</a>
+                                                    <a href="#" onclick="mainjs.unfollow_provider('{{ uDetails.token }}', {{ provider.id }}); return false;" class="btn btn-secondary btn-sm btn-upper">unfollow</a>
                                                     {% else %}
-                                                        <a href="#" onclick="mainjs.follow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-primary btn-sm btn-upper">follow</a>
+                                                        <a href="#" onclick="mainjs.follow_provider('{{ uDetails.token }}', {{ provider.id }}); return false;" class="btn btn-primary btn-sm btn-upper">follow</a>
                                                     {% endif %}
                                                 {% endif %}
 
@@ -76,7 +75,7 @@
 
                                          <li class="nav-item">
                                             <a href="/provider/{{ provider.id }}/menus/" class="nav-link" aria-selected="false">
-                                                <i class="fa fa-concierge-bell"></i> Menus ({{ otheruser_menu_count }})
+                                                <i class="fa fa-clipboard-list"></i> Menus ({{ otheruser_menu_count }})
                                             </a>
                                          </li>
                                          <li class="nav-item">

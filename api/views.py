@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments, Likes, Menus, Menu_Recipe
 from account.models import Account, Follower
-from foodproviders.models import FoodProviders
+from foodproviders.models import FoodProviders, FollowerProvider
 from api.serializers import RecipeSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -354,6 +354,44 @@ def removeFromMenu(request):
     rr = Recipe.objects.get(id=recipe_id_will_remove)
 
     Menu_Recipe.objects.filter(menu_id=mm, recipe_id=rr).delete()
+
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+
+@csrf_exempt
+@api_view(["POST"])
+def follow_provider(request):
+
+    user = Token.objects.get(key=request.auth).user
+    target_provider = request.data['target_provider']
+
+    target = FoodProviders.objects.get(id=target_provider)
+
+    newFollow = FollowerProvider(
+        targetProvider=target,
+        followerProvider=user
+    )
+    newFollow.save(force_insert=True)
+
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+@csrf_exempt
+@api_view(["POST"])
+def unfollow_provider(request):
+
+    user = Token.objects.get(key=request.auth).user
+    target_provider = request.data['target_provider']
+
+    target = FoodProviders.objects.get(id=target_provider)
+
+    FollowerProvider.objects.filter(targetProvider=target, followerProvider=user).delete()
 
     data = {
         'success': True

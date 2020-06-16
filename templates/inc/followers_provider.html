@@ -1,0 +1,19 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+ {% load static %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="kt-userpic kt-userpic--circle mr-2 float-left">
+                    <img src="{% static 'profile_photos/' %}{{ each.followerProvider.profile_photo }}" alt="image">
+                </div>
+                <div class="mt-1">
+                    <div><a href="/user/{{ each.followerProvider.username }}/" class="font-weight-bold">{{ each.followerProvider.username }}</a></div>
+                    <div class="">{{ each.extra }}</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
