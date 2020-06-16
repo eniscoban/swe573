@@ -16,6 +16,14 @@ class Category(models.Model):
         return self.category_name
 
 
+class Menus(models.Model):
+    menu_name = models.CharField(max_length=100)
+    menu_provider = models.ForeignKey(FoodProviders, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.menu_name
+
+
 class Recipe(models.Model):
     recipe_name = models.CharField(max_length=200)
     recipe_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
@@ -23,8 +31,6 @@ class Recipe(models.Model):
     recipe_description = models.TextField(blank=True)
     recipe_cuisine = models.ForeignKey(Cuisine, null=True, blank=True, on_delete=models.SET_NULL)
     recipe_category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
-
-
 
     how_many_person = models.IntegerField()
     added_date = models.DateTimeField()
@@ -60,6 +66,14 @@ class Tags(models.Model):
 
     def __str__(self):
         return self.tag_name
+
+
+class Menu_Recipe(models.Model):
+    menu_id = models.ForeignKey(Menus, null=True, blank=True, on_delete=models.SET_NULL)
+    recipe_id = models.ForeignKey(Recipe, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.menu_id.menu_name + " -> " + self.recipe_id.recipe_name
 
 
 class Comments(models.Model):

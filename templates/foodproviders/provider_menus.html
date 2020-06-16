@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <body class="class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+    <div class="row siteW ortala pt-2">
+        <div class="col-md-4 ">
+              {% include "inc/left_menu.html" %}
+        </div>
+        <div class="col-md-8">
+
+            <div class="row">
+                <div class="col-xl-12">
+
+
+                    <div class="kt-portlet kt-portlet--height-fluid">
+                    <div class="position-relative" style="height: 250px">
+                        <div id="map"></div>
+                    </div>
+
+                        <div class="kt-portlet__body">
+
+                            <div class="kt-widget kt-widget--user-profile-3">
+
+                                <div class="kt-widget__top">
+
+
+                                    <div class="kt-widget__content pl-0" >
+                                        <div class="kt-widget__head">
+                                            <a href="/user/{{ provider.provider_name }}/" class="kt-widget__username h2">
+                                                {{ provider.provider_name }}
+                                            </a>
+                                            <div class="kt-widget__action">
+
+                                                {% if provider.provider_user.username ==  uDetails.user_name  %}
+                                                    <a href="/provider-editmenus/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Edit Menus</a>
+                                                    <a href="/provider-settings/{{ provider.id }}/" class="btn btn-secondary btn-sm btn-upper">Settings</a>
+                                                {% else %}
+                                                    {% if is_following_by_me == 1 %}
+                                                    <a href="#" onclick="mainjs.unfollow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-secondary btn-sm btn-upper">unfollow</a>
+                                                    {% else %}
+                                                        <a href="#" onclick="mainjs.follow_user('{{ uDetails.token }}', '{{ otheruser.username }}'); return false;" class="btn btn-primary btn-sm btn-upper">follow</a>
+                                                    {% endif %}
+                                                {% endif %}
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="kt-widget__subhead">
+                                            <div ><i class="fa fa-user-circle mr-1"></i> <a href="/user/{{ provider.provider_user.username }}/">{{ provider.provider_user.username }}</a></div>
+                                            <div ><i class="fa fa-map-marker-alt mr-1"></i> {{ provider.provider_address }}</div>
+
+                                        </div>
+                                        <div class="kt-widget__info">
+                                            <div class="kt-widget__desc">
+                                               {{ provider.provider_description }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <ul class="nav nav-tabs nav-tabs-space-lg nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand"  style="margin-bottom: 0px !important;" role="tablist">
+                                        <li class="nav-item">
+                                            <a href="/provider/{{ provider.id }}/" class="nav-link " aria-selected="false">
+                                                <i class="fa fa-concierge-bell"></i> Recipes ({{ provider_recipe_count }})
+                                            </a>
+                                        </li>
+
+                                         <li class="nav-item">
+                                            <a href="/provider/{{ provider.id }}/menus/" class="nav-link active" aria-selected="false">
+                                                <i class="fa fa-concierge-bell"></i> Menus ({{ otheruser_menu_count }})
+                                            </a>
+                                         </li>
+                                         <li class="nav-item">
+                                            <a href="/provider/{{ provider.id }}/followers/" class="nav-link" aria-selected="false">
+                                                <i class="fa fa-users"></i> Followers ({{ provider_follower_count }})
+                                            </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+
+                    {% if uDetails.user_name == provider.provider_user.username %}
+                    <div class="kt-portlet kt-portlet--tab">
+
+                        <div class="kt-portlet__body">
+
+                            <div class="form-group mb-0">
+                                <label>Create New Menu</label>
+                                <div class="input-group">
+                                    <input id="menu_name" name="menu_name" type="text" class="form-control" placeholder="Menu Name">
+                                    <div class="input-group-append">
+                                        <a onclick="createMenu(); return false;" class="btn btn-primary" href="#">Create</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% for each in menus_all %}
+
+                        <div class="kt-portlet kt-portlet--tab">
+                            <div class="kt-portlet__head">
+                                <div class="kt-portlet__head-label">
+                                     <h3 class="kt-portlet__head-title">{{ each.menu_name }}</h3>
+                                </div>
+                                {% if uDetails.user_name == provider.provider_user.username %}
+                                <div class="kt-portlet__head-toolbar">
+                                    <div class="input-group">
+                                        <select class="form-control" id="menu_add_{{ each.id }}">
+                                            {% for inc in each.other_recipes %}
+                                            <option value="{{ inc.id }}">{{ inc.recipe_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="input-group-append">
+                                            <a class="btn btn-warning" href="#" onclick="addToMenu({{ each.id }}); return false;" >Add</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="kt-portlet__body">
+
+                                <div class="kt-widget4">
+                                    {% for inc in each.recipes %}
+                                        <div class="kt-widget4__item">
+                                            <div class="kt-widget4__info"><a href="/recipe/{{ inc.recipe_id.id }}">{{ inc.recipe_id.recipe_name }}</a></div>
+
+                                            {% if uDetails.user_name == provider.provider_user.username %}
+                                            <a href="#" onclick="removeFromMenu({{ each.id }},{{ inc.recipe_id.id }}); return false;" class="btn btn-sm btn-label-brand btn-bold"><i class="fa fa-trash-alt"></i></a>
+                                            {% endif %}
+
+                                        </div>
+                                    {% endfor %}
+
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiZW5pc2NvYmFuIiwiYSI6ImNrOWczc2poYjBoanczbG8zYjE1ejgzbnYifQ.pjaYGrcc9FfzxNh7xSin7A';
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [{{ provider.provider_lat }},  {{ provider.provider_long }}],
+        zoom: 11
+    });
+
+    var marker = new mapboxgl.Marker().setLngLat([{{ provider.provider_lat }},  {{ provider.provider_long }}]).addTo(map);
+
+    function  createMenu() {
+
+        let menu_name = $("#menu_name").val();
+
+         let sendData = {
+            menu_name : menu_name,
+            food_provider_id: {{ provider.id }}
+        }
+
+         let csrftoken = Cookies.get('csrftoken');
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/createMenu/',
+                type: 'post',
+                data: sendData,
+                headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                    location.reload();
+                }
+            });
+
+    }
+
+    function addToMenu(menu_id){
+
+        let mm = "#menu_add_"+menu_id;
+        recipe_id_will_add = $(mm).val();
+
+        let sendData = {
+            menu_id : menu_id,
+            recipe_id_will_add: recipe_id_will_add
+        }
+
+        let csrftoken = Cookies.get('csrftoken');
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/addToMenu/',
+            type: 'post',
+            data: sendData,
+            headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
+            dataType: 'json',
+            success: function(data) {
+                location.reload();
+            }
+        });
+    }
+
+    function removeFromMenu(menu_id,recipe_id) {
+        let sendData = {
+            menu_id : menu_id,
+            recipe_id_will_remove: recipe_id
+        }
+
+        let csrftoken = Cookies.get('csrftoken');
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/removeFromMenu/',
+            type: 'post',
+            data: sendData,
+            headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
+            dataType: 'json',
+            success: function(data) {
+                location.reload();
+            }
+        });
+
+    }
+</script>
+
+
+
+</body>
+
+{% endblock %}

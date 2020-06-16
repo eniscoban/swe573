@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.status import HTTP_400_BAD_REQUEST
-from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments, Likes
+from recipe.models import Recipe, Category, Cuisine, Ingredient, Nutrients, Tags, Comments, Likes, Menus, Menu_Recipe
 from account.models import Account, Follower
 from foodproviders.models import FoodProviders
 from api.serializers import RecipeSerializer
@@ -286,7 +286,6 @@ def edit_foodprovider(request):
     longitude = request.data['longitude']
     latitude = request.data['latitude']
 
-
     prv = FoodProviders.objects.get(id=provider_id)
 
     prv.provider_name = page_name
@@ -297,9 +296,66 @@ def edit_foodprovider(request):
 
     prv.save()
 
-
     data = {
         'provider_id': provider_id,
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def createMenu(request):
+    user = Token.objects.get(key=request.auth).user
+    menu_name = request.data['menu_name']
+    food_provider_id = request.data['food_provider_id']
+
+    prv = FoodProviders.objects.get(id=food_provider_id)
+
+    newMenu = Menus(
+        menu_name=menu_name,
+        menu_provider=prv
+    )
+    newMenu.save(force_insert=True)
+
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def addToMenu(request):
+    menu_id = request.data['menu_id']
+    recipe_id_will_add = request.data['recipe_id_will_add']
+
+    mm = Menus.objects.get(id=menu_id)
+    rr = Recipe.objects.get(id=recipe_id_will_add)
+
+    newMenu_Recipe = Menu_Recipe(
+        menu_id=mm,
+        recipe_id=rr
+    )
+    newMenu_Recipe.save(force_insert=True)
+    data = {
+        'success': True
+    }
+    return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def removeFromMenu(request):
+    menu_id = request.data['menu_id']
+    recipe_id_will_remove = request.data['recipe_id_will_remove']
+
+    mm = Menus.objects.get(id=menu_id)
+    rr = Recipe.objects.get(id=recipe_id_will_remove)
+
+    Menu_Recipe.objects.filter(menu_id=mm, recipe_id=rr).delete()
+
+    data = {
         'success': True
     }
     return JsonResponse(data)

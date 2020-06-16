@@ -30,7 +30,7 @@ urlpatterns = [
     path('become_fp/', foodprovider_views.become_fp, name='become_fp'),
     url(r'^provider/(?P<provider_id>\w{0,50})/$', foodprovider_views.providerPage, name='providerPage'),
     url(r'^provider-settings/(?P<provider_id>\w{0,50})/$', foodprovider_views.providerSettings, name='providerSettings'),
-
+    url(r'^provider/(?P<provider_id>\w{0,50})/menus/$', foodprovider_views.providerMenus, name='providerMenus'),
 
 
     url(r'^cuisine/(?P<cuisine_id>\w{0,50})/$', pages_views.cuisine, name='cuisine'),

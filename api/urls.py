@@ -16,6 +16,12 @@ urlpatterns = [
     path('edit_foodprovider/', views.edit_foodprovider, name='edit_foodprovider'),
 
 
+    path('createMenu/', views.createMenu, name='createMenu'),
+    path('addToMenu/', views.addToMenu, name='addToMenu'),
+    path('removeFromMenu/', views.removeFromMenu, name='removeFromMenu'),
+
+
+
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
 ]
