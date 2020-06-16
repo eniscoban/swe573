@@ -7,7 +7,7 @@ from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from .models import Account, Follower
 from recipe.models import Recipe, Likes, Comments
-from foodproviders.models import FoodProviders
+from foodproviders.models import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
 
 
@@ -146,6 +146,7 @@ def userPage(request, user_name,  *args, **kwargs):
                 'otheruser': otheruser,
                 'otheruser_recipe_count': Recipe.objects.filter(recipe_user=otheruser.id).count(),
                 'otheruser_follower_count': Follower.objects.filter(target=otheruser.id).count(),
+                'otheruser_provider_count': FoodProviders.objects.filter(provider_user=otheruser.id).count(),
                 'is_following_by_me' : is_following_by_me,
                 'recipes_all': recipes_all_temp
                 }
@@ -173,8 +174,36 @@ def userFollowers(request, user_name,  *args, **kwargs):
         'otheruser': otheruser,
         'otheruser_recipe_count': Recipe.objects.filter(recipe_user=otheruser.id).count(),
         'otheruser_follower_count': Follower.objects.filter(target=otheruser.id).count(),
+        'otheruser_provider_count': FoodProviders.objects.filter(provider_user=otheruser.id).count(),
         'is_following_by_me': is_following_by_me,
-        'users': users2_temp,
-        'recipes_all': recipes_all
+        'users': users2_temp
     }
     return render(request, 'pages/user_followers.html', args)
+
+
+def userProviders(request, user_name,  *args, **kwargs):
+
+    otheruser = Account.objects.get(username=user_name)
+    recipes_all = Recipe.objects.filter(recipe_user=otheruser.id).order_by('-id')
+
+    is_following_by_me = Follower.objects.filter(follower=request.user, target=otheruser).count()
+
+    providers = FoodProviders.objects.filter(provider_user=otheruser.id)
+    providers_temp = []
+    for each in providers:
+        follower_count = FollowerProvider.objects.filter(targetProvider=each).count()
+        recipe_count = Recipe.objects.filter(recipe_food_provider=each).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
+        providers_temp.append(each)
+
+    args = {
+        'uDetails': userDetails(request),
+        'otheruser': otheruser,
+        'otheruser_recipe_count': Recipe.objects.filter(recipe_user=otheruser.id).count(),
+        'otheruser_follower_count': Follower.objects.filter(target=otheruser.id).count(),
+        'otheruser_provider_count': FoodProviders.objects.filter(provider_user=otheruser.id).count(),
+        'is_following_by_me': is_following_by_me,
+        'providers': providers_temp
+    }
+    return render(request, 'pages/user_providers.html', args)

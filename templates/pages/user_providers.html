@@ -60,17 +60,17 @@
                             <div class="mt-3">
                                 <ul class="nav nav-tabs nav-tabs-space-lg nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand"  style="margin-bottom: 0px !important;" role="tablist">
                                     <li class="nav-item">
-                                        <a href="/user/{{ otheruser.username }}/" class="nav-link active" aria-selected="false">
+                                        <a href="/user/{{ otheruser.username }}/" class="nav-link " aria-selected="false">
                                             <i class="fa fa-concierge-bell"></i> Recipes ({{ otheruser_recipe_count }})
                                         </a>
                                     </li>
                                      <li class="nav-item">
-                                        <a href="/user/{{ otheruser.username }}/followers/" class="nav-link" aria-selected="false">
+                                        <a href="/user/{{ otheruser.username }}/followers/" class="nav-link " aria-selected="false">
                                             <i class="fa fa-users"></i> Followers ({{ otheruser_follower_count }})
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="/user/{{ otheruser.username }}/providers/" class="nav-link" aria-selected="false">
+                                        <a href="/user/{{ otheruser.username }}/providers/" class="nav-link active" aria-selected="false">
                                             <i class="fa fa-pizza-slice"></i> Food Providers ({{ otheruser_provider_count }})
                                         </a>
                                     </li>
@@ -88,10 +88,31 @@
             <div class="row">
                 <div class="col-xl-12">
 
-                    {% for each in recipes_all %}
-                         {% include "inc/recipe_short.html" %}
-                    {% endfor %}
+                     {% for each in providers %}
 
+                         <div class="kt-portlet kt-portlet--mobile">
+                            <div class="kt-portlet__body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="kt-userpic kt-userpic--circle mr-3 float-left">
+                                            <i class="fa fa-map-marker-alt kt-font-dark" style="font-size:36px"></i>
+                                        </div>
+                                        <div class="">
+                                            <div><a href="/provider/{{ each.id }}/" class="font-weight-bold">{{ each.provider_name }}</a></div>
+                                            <div class="">{{ each.extra }}</div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+                    {% endfor %}
 
                 </div>
             </div>
