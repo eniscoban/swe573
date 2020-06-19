@@ -11,8 +11,8 @@ from api.serializers import RecipeSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-import datetime
-import json
+import json, random, datetime
+
 
 
 @api_view(['POST'])
@@ -60,7 +60,6 @@ def login(request):
 @csrf_exempt
 @api_view(["POST"])
 def list_my_recipes(request):
-
     user = Token.objects.get(key=request.auth).user
     recipes = Recipe.objects.filter(recipe_user=user.id)
     serializer = RecipeSerializer(recipes, many=True)
@@ -78,7 +77,6 @@ def list_all_recipes(request):
 @csrf_exempt
 @api_view(["POST"])
 def create_recipe(request):
-
     user = Token.objects.get(key=request.auth).user
     recipe_name = request.data['recipe_name']
     user_select = request.data['user_select']
@@ -97,7 +95,6 @@ def create_recipe(request):
         provider = FoodProviders.objects.get(id=user_select)
     except FoodProviders.DoesNotExist:
         provider = None
-
 
     newRecipe = Recipe(
         recipe_name=recipe_name,
@@ -132,8 +129,6 @@ def create_recipe(request):
             recipe_id=newRecipeSec)
         newTags.save()
 
-
-
     data = {
         'newRecipeSec': "newRecipeSec",
         'user': user.username,
@@ -162,7 +157,6 @@ def add_comment(request):
         added_date=datetime.datetime.now()
     )
     newComment.save(force_insert=True)
-
     data = {
        # 'newComment': newComment.id,
         'comment': comment,
@@ -175,37 +169,25 @@ def add_comment(request):
 @csrf_exempt
 @api_view(["POST"])
 def follow_user(request):
-
     user = Token.objects.get(key=request.auth).user
     target_username = request.data['target_username']
-
     target = Account.objects.get(username=target_username)
-
     newFollow = Follower(
         target=target,
         follower=user
     )
     newFollow.save(force_insert=True)
-
-    data = {
-        'success': True
-    }
+    data = {'success': True}
     return JsonResponse(data)
 
 @csrf_exempt
 @api_view(["POST"])
 def unfollow_user(request):
-
     user = Token.objects.get(key=request.auth).user
     target_username = request.data['target_username']
-
     target = Account.objects.get(username=target_username)
-
     Follower.objects.filter(target=target, follower=user).delete()
-
-    data = {
-        'success': True
-    }
+    data = {'success': True}
     return JsonResponse(data)
 
 
@@ -223,26 +205,18 @@ def like_recipe(request):
         added_date=datetime.datetime.now()
     )
     newLike.save(force_insert=True)
-
-    data = {
-        'success': True
-    }
+    data = {'success': True}
     return JsonResponse(data)
 
 
 @csrf_exempt
 @api_view(["POST"])
 def unlike_recipe(request):
-
     user = Token.objects.get(key=request.auth).user
     recipe_id = request.data['recipe_id']
     recipe = Recipe.objects.get(id=recipe_id)
-
     Likes.objects.filter(recipe_id=recipe, like_user=user).delete()
-
-    data = {
-        'success': True
-    }
+    data = {  'success': True }
     return JsonResponse(data)
 
 
@@ -318,9 +292,7 @@ def createMenu(request):
     )
     newMenu.save(force_insert=True)
 
-    data = {
-        'success': True
-    }
+    data = {'success': True }
     return JsonResponse(data)
 
 
@@ -338,9 +310,7 @@ def addToMenu(request):
         recipe_id=rr
     )
     newMenu_Recipe.save(force_insert=True)
-    data = {
-        'success': True
-    }
+    data = {'success': True }
     return JsonResponse(data)
 
 
@@ -393,7 +363,20 @@ def unfollow_provider(request):
 
     FollowerProvider.objects.filter(targetProvider=target, followerProvider=user).delete()
 
-    data = {
-        'success': True
-    }
+    data = {'success': True}
     return JsonResponse(data)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def change_avatar(request):
+    avatars = ['prf_1.png', 'prf_2.png', 'prf_3.png', 'prf_4.png', 'prf_5.png', 'prf_6.png',
+               'prf_7.png', 'prf_8.png', 'prf_9.png']
+    user = Token.objects.get(key=request.auth).user
+
+    user.profile_photo = random.choice(avatars)
+    user.save()
+
+    data = {'success': True}
+    return JsonResponse(data)
+

@@ -27,6 +27,7 @@ urlpatterns = [
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
     path('search/', pages_views.search, name='search'),
+    path('providers_near_me/', pages_views.providers_near_me, name='providers_near_me'),
 
 
     path('become_fp/', foodprovider_views.become_fp, name='become_fp'),
@@ -50,7 +51,7 @@ urlpatterns = [
 
     url(r'^ajax/validate_username/$', pages_views.validate_username, name='validate_username'),
     url(r'^ajax/create_recipe_ajax/', pages_views.create_recipe_ajax, name='create_recipe_ajax'),
-    url(r'^ajax/change_avatar/', pages_views.change_avatar, name='change_avatar'),
+
 
     path('api/', include('api.urls')),
 

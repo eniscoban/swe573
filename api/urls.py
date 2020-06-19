@@ -23,6 +23,12 @@ urlpatterns = [
     path('follow_provider/', views.follow_provider, name='follow_provider'),
     path('unfollow_provider/', views.unfollow_provider, name='unfollow_provider'),
 
+
+    path('change_avatar/', views.change_avatar, name='change_avatar'),
+
+
+
+
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
 ]

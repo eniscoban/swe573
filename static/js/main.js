@@ -113,15 +113,23 @@ var mainjs = {
 
     },
 
-    change_avatar: function(){
-         $.ajax({
-            url: '/ajax/change_avatar/',
-            data: {},
-            dataType: 'json',
+    change_avatar: function(token){
+
+       let token_g = "Token " + token;
+       let csrftoken = Cookies.get('csrftoken');
+
+       $.ajax({
+            url: 'http://127.0.0.1:8000/api/change_avatar/',
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
+            data: {
+
+            },
             success: function (data) {
-                console.log(data);
-                location.reload();
+
+               location.reload();
             }
+
          });
     },
 

@@ -360,9 +360,6 @@ def my_following_providers(request):
     return render(request, 'pages/my_following_providers.html', args)
 
 
-
-
-
 def validate_username(request):
     username = request.GET.get('username', None)
     data = {
@@ -371,12 +368,10 @@ def validate_username(request):
     return JsonResponse(data)
 
 
-def change_avatar(request):
-    avatars = ['prf_1.png', 'prf_2.png', 'prf_3.png', 'prf_4.png', 'prf_5.png', 'prf_6.png',
-               'prf_7.png', 'prf_8.png', 'prf_9.png']
-    request.user.profile_photo = random.choice(avatars)
-    request.user.save()
-    data = {
-        'result': 'success'
-    }
-    return JsonResponse(data)
+def providers_near_me(request):
+    args = {'title': "My Followings",
+            'left_menu_selected': 'followings',
+            'uDetails': userDetails(request)
+
+            }
+    return render(request, 'pages/providers_near_me.html', args)
