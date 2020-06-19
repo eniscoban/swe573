@@ -89,6 +89,7 @@ def userDetails(request):
         notification_count = 0
         my_follower_count = Follower.objects.filter(target=request.user.id).count()
         my_following_count = Follower.objects.filter(follower=request.user.id).count()
+        my_following_provider_count = FollowerProvider.objects.filter(followerProvider=request.user.id).count()
         providers = FoodProviders.objects.filter(provider_user=request.user.id)
     else:
         is_auth = False
@@ -103,12 +104,14 @@ def userDetails(request):
         notification_count = 0
         my_follower_count = 0
         my_following_count = 0
+        my_following_provider_count = 0
         token = ""
         providers = []
 
     return {'is_auth': is_auth,
             'my_follower_count': my_follower_count,
             'my_following_count': my_following_count,
+            'my_following_provider_count': my_following_provider_count,
             'notification_count': notification_count,
             'recipe_count': recipe_count,
             'user_name': user_name,

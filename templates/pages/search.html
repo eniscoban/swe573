@@ -10,20 +10,18 @@
         </div>
         <div class="col-md-8">
 
-            <div class="row mb-4">
-                <div class="col-md-9">
+            <div class="row mb-3">
+                <div class="col-md-12">
                     <form action="/search/">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search for...">
+                        <input type="text" class="form-control" value="{{ keyword }}" id="keyword" name="keyword" placeholder="Search for...">
                         <div class="input-group-append">
                             <button class="btn btn-info" type="submit">Search</button>
                         </div>
                     </div>
                     </form>
                 </div>
-                <div class="col-md-3">
-                    <a href="/create_recipe/" class="btn btn-success form-control">Create a Recipe</a>
-                </div>
+
             </div>
 
 
@@ -31,6 +29,7 @@
             {% for each in recipes_all %}
                  {% include "inc/recipe_short.html" %}
             {% endfor %}
+
 
         </div>
 

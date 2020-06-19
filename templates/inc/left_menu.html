@@ -37,7 +37,7 @@
                         <i class="kt-nav__link-icon fa fa-users"></i>
                         <span class="kt-nav__link-text">My Followers</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--success">{{ uDetails.my_follower_count }}</span>
+                            <span class="kt-badge kt-badge--info">{{ uDetails.my_follower_count }}</span>
                         </span>
                     </a>
                 </li>
@@ -47,7 +47,17 @@
                         <i class="kt-nav__link-icon fa fa-users"></i>
                         <span class="kt-nav__link-text">My Followings</span>
                          <span class="kt-nav__link-badge">
-                            <span class="kt-badge kt-badge--success">{{ uDetails.my_following_count }}</span>
+                            <span class="kt-badge kt-badge--info">{{ uDetails.my_following_count }}</span>
+                        </span>
+                    </a>
+                </li>
+
+              <li class="kt-nav__item {% if left_menu_selected == 'following_providers' %}active{% endif %}">
+                    <a href="/my_following_providers/" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-map-marker-alt "></i>
+                        <span class="kt-nav__link-text">My Following Providers</span>
+                         <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--info">{{ uDetails.my_following_provider_count }}</span>
                         </span>
                     </a>
                 </li>

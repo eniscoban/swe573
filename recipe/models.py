@@ -36,7 +36,7 @@ class Recipe(models.Model):
     added_date = models.DateTimeField()
 
     def __str__(self):
-        return self.recipe_name
+        return self.recipe_name + " -> " + self.recipe_user.username
 
 
 class Ingredient(models.Model):

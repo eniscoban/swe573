@@ -8,19 +8,40 @@ from django.core.mail import send_mail
 import datetime, random, hashlib
 from random import random
 from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags, Comments, Likes
-from foodproviders.models import FoodProviders
+from django.db.models import Q
 from account.views import userDetails
-from foodproviders.views import FoodProviders
+from foodproviders.views import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
 
 
 def home(request):
-
     if request.user.is_authenticated:
+
+        users = Follower.objects.filter(follower=request.user)
+        users_followed = []
+        for each in users:
+            users_followed.append(each.target.id)
+
+        providers = FollowerProvider.objects.filter(followerProvider=request.user)
+        providers_followed = []
+        for each in providers:
+            providers_followed.append(each.targetProvider.id)
+
+
+        recipes_all = Recipe.objects.filter(Q(recipe_user__in=users_followed) | Q(recipe_food_provider__in=providers_followed)).order_by('-id')
+        recipes_all_temp = []
+
+        for each in recipes_all:
+            each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+            each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+            each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+            recipes_all_temp.append(each)
 
         args = {'title': "Home Title",
                 'left_menu_selected': 'feed',
-                'uDetails': userDetails(request)
+                'uDetails': userDetails(request),
+                'recipes_all': recipes_all_temp
+
                 }
         return render(request, 'pages/home.html', args)
     else:
@@ -38,7 +59,7 @@ def create_recipe(request):
             'categories': categories,
             'cuisines': cuisines,
             'providers': providers,
-            'token':token
+            'token': token
             }
     return render(request, 'pages/create_recipe.html', args)
 
@@ -46,7 +67,6 @@ def create_recipe(request):
 def create_recipe_ajax(request):
     uDetails = userDetails(request)
     account = Account.objects.get(id=request.user.id)
-
 
     recipe_name = request.POST.get('recipe_name')
     recipe_description = request.POST.get('recipe_description')
@@ -88,11 +108,9 @@ def create_recipe_ajax(request):
 
 
 def my_recipes(request):
-
     recipes_all = Recipe.objects.filter(recipe_user=request.user.id).order_by('-id')
     recipes_all_temp = []
     for each in recipes_all:
-
         each.like_count = Likes.objects.filter(recipe_id=each.id).count()
         each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
         each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
@@ -106,8 +124,28 @@ def my_recipes(request):
     return render(request, 'pages/my_recipes.html', args)
 
 
-def cuisine(request, cuisine_id):
+def search(request,  *args, **kwargs):
 
+    recipes_all_temp = []
+    keyword = request.GET.get('keyword')
+
+    recipes_keyword = Recipe.objects.filter(recipe_name__contains=keyword).order_by('-id')
+    for each in recipes_keyword:
+        each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+        each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+        each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+        recipes_all_temp.append(each)
+
+
+    args = {'title': "Search Recipe",
+            'left_menu_selected': '',
+            'uDetails': userDetails(request),
+            'keyword': keyword,
+            'recipes_all': recipes_all_temp
+            }
+    return render(request, 'pages/search.html', args)
+
+def cuisine(request, cuisine_id):
     recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
     cuis = Cuisine.objects.get(id=cuisine_id)
 
@@ -121,7 +159,6 @@ def cuisine(request, cuisine_id):
 
 
 def category(request, category_id):
-
     recipes_all = Recipe.objects.filter(recipe_category=category_id).order_by('-id')
     cat = Category.objects.get(id=category_id)
 
@@ -135,7 +172,6 @@ def category(request, category_id):
 
 
 def tag(request, tag_id):
-
     tag_recipeid = Tags.objects.filter(tag_tid=tag_id)
 
     arr = []
@@ -156,7 +192,6 @@ def tag(request, tag_id):
 
 
 def notifications(request):
-
     args = {'title': "Notifications",
             'left_menu_selected': 'notifications',
             'uDetails': userDetails(request)
@@ -182,8 +217,6 @@ def confirm_email(request, email_hash):
 
 
 def settings_email(request):
-
-
     if request.method == 'POST':
         new_email = request.POST.get('new_email')
         queryset = Account.objects.filter(email=new_email).count()
@@ -219,7 +252,6 @@ def settings_email(request):
 
 
 def settings_password(request):
-
     if request.method == 'POST':
 
         current_password = request.POST.get('pass1')
@@ -257,7 +289,7 @@ def settings(request):
                                    birth_day=uDetails['birth_day'], about=uDetails['about'])
 
         # create and save token for api
-        token, _ = Token.objects.get_or_create(user= request.user)
+        token, _ = Token.objects.get_or_create(user=request.user)
 
         args = {'title': "Settings",
                 'left_menu_selected': 'settings',
@@ -271,11 +303,10 @@ def settings(request):
 
 
 def my_followers(request):
-
     users = Follower.objects.filter(target=request.user)
     users2_temp = []
     for each in users:
-        #each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
+        # each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
 
         follower_count = Follower.objects.filter(target=each.follower).count()
         recipe_count = Recipe.objects.filter(recipe_user=each.follower).count()
@@ -296,7 +327,6 @@ def my_followings(request):
     users = Follower.objects.filter(follower=request.user)
     users2_temp = []
     for each in users:
-
         follower_count = Follower.objects.filter(target=each.target).count()
         recipe_count = Recipe.objects.filter(recipe_user=each.target).count()
 
@@ -309,6 +339,27 @@ def my_followings(request):
             'users': users2_temp
             }
     return render(request, 'pages/my_followings.html', args)
+
+
+def my_following_providers(request):
+    providers = FollowerProvider.objects.filter(followerProvider=request.user)
+    providers_temp = []
+    for each in providers:
+        follower_count = FollowerProvider.objects.filter(targetProvider=each.targetProvider).count()
+        recipe_count = Recipe.objects.filter(recipe_food_provider=each.targetProvider).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
+        providers_temp.append(each)
+
+
+    args = {'title': "My Following Providers",
+            'left_menu_selected': 'following_providers',
+            'uDetails': userDetails(request),
+            'providers': providers_temp
+            }
+    return render(request, 'pages/my_following_providers.html', args)
+
+
 
 
 
@@ -329,7 +380,3 @@ def change_avatar(request):
         'result': 'success'
     }
     return JsonResponse(data)
-
-
-
-

@@ -1,0 +1,20 @@
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__body">
+ {% load static %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="kt-userpic kt-userpic--circle mr-3 float-left">
+                    <i class="fa fa-map-marker-alt kt-font-dark" style="font-size:34px"></i>
+                </div>
+                <div class="">
+
+                    <div><a href="/provider/{{ each.targetProvider.id }}/" class="font-weight-bold">{{ each.targetProvider.provider_name }}</a></div>
+                    <div class="">{{ each.extra }}</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
