@@ -51,7 +51,7 @@ def home(request):
         return HttpResponseRedirect(reverse('user_login'))
 
 
-def create_recipe(request):
+def create_recipe(request, *args, **kwargs):
     categories = Category.objects.all()
     cuisines = Cuisine.objects.all()
     token, _ = Token.objects.get_or_create(user=request.user)
