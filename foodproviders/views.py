@@ -10,6 +10,7 @@ from foodproviders.models import FoodProviders, FollowerProvider
 from recipe.models import Recipe, Category, Cuisine, Ingredient, Tags, Comments, Likes, Menus, Menu_Recipe
 from account.views import userDetails
 from rest_framework.authtoken.models import Token
+#from django.contrib.gis.geos import Point
 
 
 def become_fp(request):

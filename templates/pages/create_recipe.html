@@ -234,7 +234,7 @@ function addIngredient() {
         nutrients_ready.push({
             nutrient_name:element.nutrient_name,
             nutrient_unit: element.nutrient_unitName,
-            nutrient_amount:element.nutrient_amount*100/temp_portition_gram*temp_ingredient_amount,
+            nutrient_amount:element.nutrient_amount*temp_portition_gram*temp_ingredient_amount/100,
             ingredient_id:temp_ingredient_fdcId
         });
      });

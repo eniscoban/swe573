@@ -12,6 +12,9 @@ from django.db.models import Q
 from account.views import userDetails
 from foodproviders.views import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
+#from django.contrib.gis.geos import fromstr
+#from django.contrib.gis.db.models.functions import Distance
+#from django.contrib.gis.db import models
 
 
 def home(request):
@@ -368,10 +371,24 @@ def validate_username(request):
     return JsonResponse(data)
 
 
-def providers_near_me(request):
+def providers_near_me(request, *args, **kwargs):
+    meter = request.GET.get('meter', None)
+
+
+    providers = FollowerProvider.objects.filter(followerProvider=request.user)
+    providers_temp = []
+    for each in providers:
+        follower_count = FollowerProvider.objects.filter(targetProvider=each.targetProvider).count()
+        recipe_count = Recipe.objects.filter(recipe_food_provider=each.targetProvider).count()
+
+        each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
+        providers_temp.append(each)
+
     args = {'title': "My Followings",
             'left_menu_selected': 'followings',
-            'uDetails': userDetails(request)
+            'uDetails': userDetails(request),
+            'meter': meter,
+            'providers': providers_temp
 
             }
     return render(request, 'pages/providers_near_me.html', args)

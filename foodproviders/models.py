@@ -1,5 +1,7 @@
 from django.db import models
 from account.models import Account
+#from django.contrib.gis.db import models
+
 
 class FoodProviders(models.Model):
     provider_name = models.CharField(max_length=200)
@@ -8,6 +10,7 @@ class FoodProviders(models.Model):
     provider_address = models.CharField(max_length=300)
     provider_lat = models.FloatField(default=0.0)
     provider_long = models.FloatField(default=0.0)
+    #geoCoords = models.PointField(null=True, blank=True)
 
     added_date = models.DateTimeField()
 

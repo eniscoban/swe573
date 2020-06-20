@@ -1,9 +1,9 @@
 from django.db.models import Sum,Count
 from django.shortcuts import render
 from account.views import userDetails
-from recipe.models import Recipe, Ingredient, Nutrients, Tags, Comments, Likes
+from recipe.models import Recipe, Ingredient, Nutrients, Tags, Comments, Likes, Daily_Nutrients
 from rest_framework.authtoken.models import Token
-
+import math
 
 
 def recipe(request, recipe_id):
@@ -17,7 +17,32 @@ def recipe(request, recipe_id):
     nutrients = Nutrients.objects.filter(recipe_id=recipe_id)\
         .values('nutrient_name', 'nutrient_unit')\
         .annotate(dcount=Sum('nutrient_quantity'))\
-        .order_by('-dcount')
+
+    daily = Daily_Nutrients.objects.all().order_by('-id')
+    daily_temp = []
+    for each in daily:
+
+        for nut in nutrients:
+            if each.nutrient_name in nut['nutrient_name']:
+                each.real_value = nut['dcount']
+                each.percents = math.ceil(nut['dcount'] / each.needed * 100)
+
+
+        daily_temp.append(each)
+
+
+    energy = 0.0
+    for each in nutrients:
+        if each['nutrient_name'] == "Energy":
+            if each['nutrient_unit'] == "kJ":
+                dcount = each['dcount'] / 4.184
+            else:
+                dcount = each['dcount']
+
+            energy = energy + float(dcount)
+
+
+
 
     tags = Tags.objects.filter(recipe_id=recipe_id)
 
@@ -38,6 +63,8 @@ def recipe(request, recipe_id):
             'recipe_food_provider': recipeDetails.recipe_food_provider,
             'ingredients': ingredients,
             'nutrients': nutrients,
+            'energy': energy,
+            'daily':daily_temp,
             'tags': tags,
             'comments': comments,
             'like_count': like_count,

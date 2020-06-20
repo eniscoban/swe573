@@ -1,13 +1,23 @@
 import os
+
+if os.name == 'nt':
+    print("-----")
+    import platform
+    OSGEO4W = r"C:\OSGeo4W"
+    if '64' in platform.architecture()[0]:
+        OSGEO4W += "64"
+    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+    os.environ['OSGEO4W_ROOT'] = OSGEO4W
+    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
+    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+
+
 import posixpath
 from django.contrib.auth import get_user_model
-
-
+#from django.contrib.gis import gdal
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '*$q^^71vi%!bcguvb^l9naj@+&a7$&krgycu%b8+53ynfveu-@'
@@ -16,6 +26,8 @@ SECRET_KEY = '*$q^^71vi%!bcguvb^l9naj@+&a7$&krgycu%b8+53ynfveu-@'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
 
 
 # Application definition
@@ -27,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #'django.contrib.gis',
     'rest_framework',
     'rest_framework.authtoken',
     'api',
@@ -35,6 +48,12 @@ INSTALLED_APPS = [
     'recipe',
     'foodproviders'
 ]
+
+GEOS_LIBRARY_PATH = r'C:\OSGeo4W64\bin\geos_c.dll'
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal204.dll'
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +66,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'wwwe.urls'
+
+
 
 TEMPLATES = [
     {
@@ -85,6 +106,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'wwwe2',
         'USER': 'postgres',
         'PASSWORD': '1q2w3e',

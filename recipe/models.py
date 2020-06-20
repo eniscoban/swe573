@@ -93,3 +93,14 @@ class Likes(models.Model):
 
     def __str__(self):
         return self.like_user.username
+
+class Daily_Nutrients(models.Model):
+    nutrient_name = models.CharField(max_length=200)
+    nutrient_unit = models.CharField(max_length=300)
+    needed =  models.FloatField(default=0.0)
+    gender_role = (('Female', "Female"), ('Male', "Male"))
+    gender = models.CharField(max_length=10, choices=gender_role, verbose_name='gender', default='Female')
+    age = models.IntegerField(default=20)
+
+    def __str__(self):
+        return self.nutrient_name + " ... " + str(self.needed) + self.nutrient_unit + "... " + self.gender + "-" + str(self.age)
