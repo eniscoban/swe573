@@ -22,7 +22,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link active"  href="settings/password"  aria-selected="false">
+                                    <a class="nav-link"  href="settings/password"  aria-selected="false">
                                         <i class="fa fa-lock"></i> Change Password
                                     </a>
                                 </li>
@@ -33,7 +33,7 @@
                                 </li>
 
                                  <li class="nav-item">
-                                    <a class="nav-link"  href="/settings/allergies" >
+                                    <a class="nav-link active"  href="/settings/allergies" >
                                         <i class="fa fa-exclamation-triangle"></i> Allergies
                                     </a>
                                 </li>
@@ -46,32 +46,31 @@
                             <div class="tab-content">
 
                                 <div class="tab-pane active" id="kt_apps_user_edit_tab_3" role="tabpanel">
-                                  <form method="POST" class="kt-form" action="/settings/password">
+                                  <form method="POST" class="kt-form" action="/settings/allergies">
                                     {% csrf_token %}
                                     <div class="kt-form kt-form--label-right">
                                         <div class="kt-form__body">
                                             <div class="kt-section kt-section--first">
                                                 <div class="kt-section__body">
 
+                                                    <div class="form-group">
+													<label>Please check your allergies!</label>
+													<div class="kt-checkbox-list">
 
-                                                    <div class="form-group row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label">Current Password</label>
-                                                        <div class="col-lg-9 col-xl-6">
-                                                            <input type="password" id="pass1" name="pass1" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label">New Password</label>
-                                                        <div class="col-lg-9 col-xl-6">
-                                                             <input type="password" id="pass2" name="pass2" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group form-group-last row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label">Verify Password</label>
-                                                        <div class="col-lg-9 col-xl-6">
-                                                             <input type="password" id="pass3" name="pass3" class="form-control">
-                                                        </div>
-                                                    </div>
+                                                        {% for each in all_allergies %}
+														<label class="kt-checkbox kt-checkbox--bold kt-checkbox--success">
+															<input value="{{ each.id }}" id="alerg" name="alerg[]" {% if each.selected >= 1 %} checked="checked" {% endif %} type="checkbox"> {{ each.allergie_name }}
+															<span></span>
+														</label>
+                                                        {% endfor %}
+
+													</div>
+												</div>
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>

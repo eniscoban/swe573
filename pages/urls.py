@@ -13,6 +13,7 @@ urlpatterns = [
     path('settings/', pages_views.settings, name='settings'),
     path('settings/password', pages_views.settings_password, name='settings_password'),
     path('settings/email', pages_views.settings_email, name='settings_email'),
+    path('settings/allergies', pages_views.settings_allergies, name='settings_allergies'),
     path('search/', pages_views.search, name='search'),
     path('providers_near_me/', pages_views.providers_near_me, name='providers_near_me'),
 

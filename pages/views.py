@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from account.models import Account, Follower
+from account.models import Account, Follower, Allergies, UserAllergies
 from .forms import GeneralSettingsForm, PassSettingsForm
 from django.urls import reverse
 from django.contrib import messages
@@ -13,9 +13,7 @@ from django.db.models import Q
 from account.views import userDetails
 from foodproviders.views import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
-#from django.contrib.gis.geos import fromstr
-#from django.contrib.gis.db.models.functions import Distance
-#from django.contrib.gis.db import models
+
 
 
 def home(request):
@@ -280,6 +278,39 @@ def settings_password(request):
 
                 }
         return render(request, 'pages/settings_password.html', args)
+
+def settings_allergies(request):
+
+    if request.method == 'POST':
+
+        UserAllergies.objects.filter(allergie_user=request.user).delete()
+        alerg = request.POST.getlist('alerg[]')
+        for each in alerg:
+
+            al = Allergies.objects.get(id=each)
+            newAllergie = UserAllergies(
+                allergie_user=request.user,
+                allergie=al
+            )
+            newAllergie.save(force_insert=True)
+
+        return HttpResponseRedirect(reverse('settings_allergies'))
+    else:
+
+        all_allergies = Allergies.objects.all()
+        all_allergies_temp = []
+        for each in all_allergies:
+            each.selected = UserAllergies.objects.filter(allergie_user=request.user, allergie= each).count()
+            all_allergies_temp.append(each)
+
+
+        args = {'title': "Allergies",
+                'left_menu_selected': 'settings',
+                'uDetails': userDetails(request),
+                'all_allergies': all_allergies_temp
+
+                }
+        return render(request, 'pages/settings_allergies.html', args)
 
 
 def settings(request):
