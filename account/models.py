@@ -74,3 +74,17 @@ class Follower(models.Model):
 
     def __str__(self):
         return self.follower.username + " -> " + self.target.username
+
+class Allergies(models.Model):
+    allergie_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.allergie_name
+
+
+class UserAllergies(models.Model):
+    allergie = models.ForeignKey(Allergies, null=True, blank=True, on_delete=models.SET_NULL)
+    allergie_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.allergie.allergie_name + "->" + self.allergie_user.username

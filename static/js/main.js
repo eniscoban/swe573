@@ -113,7 +113,7 @@ var mainjs = {
 
     },
 
-    change_avatar: function(token){
+    change_avatar: function(tokenlike_recipe){
 
        let token_g = "Token " + token;
        let csrftoken = Cookies.get('csrftoken');

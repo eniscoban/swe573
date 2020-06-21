@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from account.models import Account, Follower
@@ -51,7 +52,8 @@ def home(request):
         return HttpResponseRedirect(reverse('user_login'))
 
 
-def create_recipe(request, *args, **kwargs):
+@login_required
+def create_recipe(request):
     categories = Category.objects.all()
     cuisines = Cuisine.objects.all()
     token, _ = Token.objects.get_or_create(user=request.user)
@@ -150,7 +152,8 @@ def search(request,  *args, **kwargs):
 
 def cuisine(request, cuisine_id):
     recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
-    cuis = Cuisine.objects.get(id=cuisine_id)
+    #cuis = Cuisine.objects.get(id=cuisine_id)
+    cuis = get_object_or_404(Cuisine, pk=cuisine_id)
 
     args = {'title': "My Recipe",
             'left_menu_selected': '',
@@ -309,11 +312,8 @@ def my_followers(request):
     users = Follower.objects.filter(target=request.user)
     users2_temp = []
     for each in users:
-        # each.follower.is_following_by_me = Follower.objects.filter(follower=request.user, target=each.follower).count()
-
         follower_count = Follower.objects.filter(target=each.follower).count()
         recipe_count = Recipe.objects.filter(recipe_user=each.follower).count()
-
         each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         users2_temp.append(each)
 
@@ -332,7 +332,6 @@ def my_followings(request):
     for each in users:
         follower_count = Follower.objects.filter(target=each.target).count()
         recipe_count = Recipe.objects.filter(recipe_user=each.target).count()
-
         each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         users2_temp.append(each)
 
@@ -350,10 +349,8 @@ def my_following_providers(request):
     for each in providers:
         follower_count = FollowerProvider.objects.filter(targetProvider=each.targetProvider).count()
         recipe_count = Recipe.objects.filter(recipe_food_provider=each.targetProvider).count()
-
         each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         providers_temp.append(each)
-
 
     args = {'title': "My Following Providers",
             'left_menu_selected': 'following_providers',
@@ -373,8 +370,6 @@ def validate_username(request):
 
 def providers_near_me(request, *args, **kwargs):
     meter = request.GET.get('meter', None)
-
-
     providers = FollowerProvider.objects.filter(followerProvider=request.user)
     providers_temp = []
     for each in providers:
