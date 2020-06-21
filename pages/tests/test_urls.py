@@ -32,7 +32,6 @@ class TestUrls(SimpleTestCase):
 
     def test_create_recipe_url_is_resolved(self):
         url = reverse('create_recipe_page')
-        print(resolve(url))
         self.assertEquals(resolve(url).func, create_recipe)
 
 

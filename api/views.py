@@ -216,7 +216,7 @@ def unlike_recipe(request):
     recipe_id = request.data['recipe_id']
     recipe = Recipe.objects.get(id=recipe_id)
     Likes.objects.filter(recipe_id=recipe, like_user=user).delete()
-    data = {  'success': True }
+    data = { 'success': True }
     return JsonResponse(data)
 
 

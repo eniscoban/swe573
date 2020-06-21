@@ -251,8 +251,6 @@ var mainjs = {
         });
     },
 
-
-
     like_recipe:function(token,recipe_id){
        let token_g = "Token " + token;
        let csrftoken = Cookies.get('csrftoken');
@@ -288,9 +286,6 @@ var mainjs = {
             }
        });
     },
-
-
-
 
     follow_provider:function (token, target_provider) {
 
