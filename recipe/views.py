@@ -2,8 +2,11 @@ from django.db.models import Sum,Count
 from django.shortcuts import render
 from account.views import userDetails
 from recipe.models import Recipe, Ingredient, Nutrients, Tags, Comments, Likes, Daily_Nutrients
+from account.models import UserAllergies, Allergies
 from rest_framework.authtoken.models import Token
 import math
+from django.db.models import Q
+
 
 
 def recipe(request, recipe_id):
@@ -27,7 +30,6 @@ def recipe(request, recipe_id):
                 each.real_value = nut['dcount']
                 each.percents = math.ceil(nut['dcount'] / each.needed * 100)
 
-
         daily_temp.append(each)
 
 
@@ -40,6 +42,18 @@ def recipe(request, recipe_id):
                 dcount = each['dcount']
 
             energy = energy + float(dcount)
+
+
+    user_allergies = UserAllergies.objects.filter(allergie_user=request.user)
+    user_allergies_names = []
+    for each in user_allergies:
+        user_allergies_names.append(each.allergie.allergie_name)
+
+    ingredients_temp = []
+    for each in ingredients:
+        res = [ele for ele in user_allergies_names if (ele in each.ingredient_name)]
+        each.allergie = bool(res)
+        ingredients_temp.append(each)
 
 
 
