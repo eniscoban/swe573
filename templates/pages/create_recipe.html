@@ -168,6 +168,7 @@ function list_selected_tags() {
 
 
     tags_ready.forEach(function(item){
+        console.log(item);
         willadd += '<span class="kt-badge kt-badge--dark kt-badge--inline mr-2">'+item.name+' <a href="#" class="kt-font-warning" onclick="removeSelected(\''+item.tid+'\'); return false;"><i class="fa fa-trash-alt ml-2"></i></a></span>';
     });
 
