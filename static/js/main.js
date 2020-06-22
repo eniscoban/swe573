@@ -115,10 +115,15 @@ var mainjs = {
             let csrftoken3 = $("#csrf_token").val();
             console.log("csrftoken3:"+csrftoken3);
 
+
+            let csrftoken4 = $("input[name=csrfmiddlewaretoken]").val();
+             console.log("csrftoken4:"+csrftoken4);
+
+
             $.ajax({
             url: '/signup/',
             type: 'POST',
-            headers: { 'X-CSRFToken': csrftoken },
+            headers: { 'X-CSRFToken': csrftoken4 },
             data: {
                 'email': id_email,
                 'password': id_password,
