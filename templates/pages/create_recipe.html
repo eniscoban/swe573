@@ -30,6 +30,8 @@
                         </select>
                     </div>
 
+                    {% csrf_token %}
+
                     <div class="form-group">
                         <label>Recipe Name</label>
                         <input type="text" class="form-control" name="recipe_name" id="recipe_name"  >

@@ -109,8 +109,11 @@ var mainjs = {
             console.log("csrftoken:"+csrftoken);
 
             var csrftoken1 = this.getCookie('csrftoken');
-            console.log("csrftoken1:"+csrftoken);
+            console.log("csrftoken1:"+csrftoken1);
 
+
+            let csrftoken3 = $("#csrf_token").val();
+            console.log("csrftoken3:"+csrftoken3);
 
             $.ajax({
             url: '/signup/',
