@@ -89,6 +89,8 @@ var mainjs = {
 
             let csrftoken = Cookies.get('csrftoken');
 
+            console.log("csrftoken:"+csrftoken);
+
             $.ajax({
             url: '/signup/',
             type: 'POST',
@@ -334,6 +336,8 @@ var mainjs = {
 };
 
 $( document ).ready(function() {
+
+
 
     let id_username = document.getElementById("id_username");
 
