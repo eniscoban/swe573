@@ -134,7 +134,7 @@ var mainjs = {
 
     },
 
-    change_avatar: function(tokenlike_recipe){
+    change_avatar: function(token){
 
        let token_g = "Token " + token;
        let csrftoken = Cookies.get('csrftoken');
@@ -152,36 +152,6 @@ var mainjs = {
             }
 
          });
-    },
-
-    create_recipe_ajax:function() {
-         let csrftoken = Cookies.get('csrftoken');
-
-         let recipe_name = $("#recipe_name").val();
-         let recipe_description = $("#recipe_description").val();
-         let recipe_category = $("#recipe_category").val();
-         let recipe_cuisine = $("#recipe_cuisine").val();
-         let ingredients_ready = window.ingredients_ready;
-         let recipe_serving = $("#recipe_serving").val();
-
-         $.ajax({
-            url: '/ajax/create_recipe_ajax/',
-            type: 'POST',
-            headers: {'X-CSRFToken': csrftoken},
-            data: {
-                'recipe_name': recipe_name,
-                'recipe_description': recipe_description,
-                'recipe_category': recipe_category,
-                'recipe_cuisine': recipe_cuisine,
-                'recipe_serving': recipe_serving,
-                'ingredients_ready': ingredients_ready
-            },
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-            }
-         });
-
     },
 
     checkUsername:function() {
