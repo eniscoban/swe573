@@ -450,6 +450,9 @@ function addRecipe(){
         dataType: 'json',
         success: function(data) {
             console.log(data);
+            console.log(data.newRecipeSec);
+            window.location.replace("http://161.35.23.187:8000/recipe/"+data.newRecipeSec+"/");
+
 
         }
     });

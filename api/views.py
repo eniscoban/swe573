@@ -131,7 +131,7 @@ def create_recipe(request):
         newTags.save()
 
     data = {
-        'newRecipeSec': "newRecipeSec",
+        'newRecipeSec': newRecipeSec.id,
         'user': user.username,
         'recipe_name': recipe_name,
         'recipe_description': recipe_description,
