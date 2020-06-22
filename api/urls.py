@@ -15,6 +15,7 @@ urlpatterns = [
     path('create_foodprovider/', views.create_foodprovider, name='create_foodprovider'),
     path('edit_foodprovider/', views.edit_foodprovider, name='edit_foodprovider'),
 
+    path('getTagsFromWikidata/', views.getTagsFromWikidata, name='getTagsFromWikidata'),
 
     path('createMenu/', views.createMenu, name='createMenu'),
     path('addToMenu/', views.addToMenu, name='addToMenu'),

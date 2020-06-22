@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 import json, random, datetime
+import requests
 
 
 
@@ -379,4 +380,18 @@ def change_avatar(request):
 
     data = {'success': True}
     return JsonResponse(data)
+
+@csrf_exempt
+@api_view(["POST"])
+def getTagsFromWikidata(request):
+    keyword = request.data['keyword']
+    user = Token.objects.get(key=request.auth).user
+
+    url = "https://wikidata.org/w/api.php?action=wbsearchentities&search=" + keyword + "&format=json&language=en&type=item&continue=0"
+
+    response = requests.get(url)
+
+    print(response.content)
+    #data = {'success': True}
+    return HttpResponse(response.content)
 

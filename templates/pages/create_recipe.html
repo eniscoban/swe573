@@ -183,6 +183,45 @@ function delay(fn, ms) {
   }
 }
 
+
+function restCallTag_Wikidata() {
+    query = $("#recipe_tag").val();
+    let csrftoken4 = $("input[name=csrfmiddlewaretoken]").val();
+
+    let sendData = {
+        keyword : query
+    }
+
+     $.ajax({
+        url: 'http://127.0.0.1:8000/api/getTagsFromWikidata/',
+        type: 'post',
+        data: sendData,
+        headers: {'X-CSRFToken': csrftoken4, 'Authorization': 'Token {{ token }}' },
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+
+            added_list = '';
+            data.search.forEach(
+                function(each){
+                    added_list += '<a href="#" onclick="addSelected(\''+each.id+'\',\''+each.match.text+'\'); return false;" class="btn btn-outline-hover-primary w-100"><div class="text-left"><div class="font-weight-bold">'+each.match.text+'</div><div><small>'+each.description+'</small></div></div></a>';
+                }
+            );
+            $("#tag_res").removeClass('d-none');
+            $("#tag_res").html(added_list);
+
+        }
+    });
+
+
+
+
+}
+
+
+
+
+/*
 function restCallTag_Wikidata() {
     query = $("#recipe_tag").val();
     $.ajax({
@@ -204,7 +243,7 @@ function restCallTag_Wikidata() {
     });
 
 }
-
+*/
 
 jQuery(document).ready(function() {
 
@@ -402,7 +441,7 @@ function addRecipe(){
     }
 
 
-    let csrftoken = Cookies.get('csrftoken');
+    let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
     $.ajax({
         url: 'http://127.0.0.1:8000/api/create_recipe/',
         type: 'post',
