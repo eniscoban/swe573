@@ -154,11 +154,18 @@ def cuisine(request, cuisine_id):
     recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
     cuis = get_object_or_404(Cuisine, pk=cuisine_id)
 
+    recipes_all_temp = []
+    for each in recipes_all:
+        each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+        each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+        each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+        recipes_all_temp.append(each)
+
     args = {'title': "My Recipe",
             'left_menu_selected': '',
             'uDetails': userDetails(request),
             'cuisine_name': cuis.cuisine_name,
-            'recipes_all': recipes_all
+            'recipes_all': recipes_all_temp
             }
     return render(request, 'pages/cuisine.html', args)
 
@@ -167,11 +174,18 @@ def category(request, category_id):
     recipes_all = Recipe.objects.filter(recipe_category=category_id).order_by('-id')
     cat = Category.objects.get(id=category_id)
 
+    recipes_all_temp = []
+    for each in recipes_all:
+        each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+        each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+        each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+        recipes_all_temp.append(each)
+
     args = {'title': "My Recipe",
             'left_menu_selected': '',
             'uDetails': userDetails(request),
             'category_name': cat.category_name,
-            'recipes_all': recipes_all
+            'recipes_all': recipes_all_temp
             }
     return render(request, 'pages/category.html', args)
 
@@ -184,6 +198,13 @@ def tag(request, tag_id):
         arr.append(each.recipe_id.id)
 
     recipes_all = Recipe.objects.filter(id__in=arr).order_by('-id')
+    recipes_all_temp = []
+    for each in recipes_all:
+        each.like_count = Likes.objects.filter(recipe_id=each.id).count()
+        each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+        each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
+        recipes_all_temp.append(each)
+
 
     tag_name = Tags.objects.filter(tag_tid=tag_id)[:1]
 
@@ -191,7 +212,7 @@ def tag(request, tag_id):
             'left_menu_selected': '',
             'uDetails': userDetails(request),
             'tag_name': tag_name[0],
-            'recipes_all': recipes_all
+            'recipes_all': recipes_all_temp
             }
     return render(request, 'pages/tag.html', args)
 
