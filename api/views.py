@@ -133,13 +133,7 @@ def create_recipe(request):
 
     data = {
         'newRecipeSec': newRecipeSec.id,
-        'user': user.username,
-        'recipe_name': recipe_name,
-        'recipe_description': recipe_description,
-        'ingredients': ingredients[0]['name'],
-        'nutrients': nutrients[0]['nutrient_name'],
-        'tags': tags[0]['name']
-
+        'success': True
     }
     return JsonResponse(data)
 
