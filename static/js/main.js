@@ -27,6 +27,7 @@ var mainjs = {
         let id_password = $("#id_password").val();
 
         let csrftoken = Cookies.get('csrftoken');
+        let csrftoken4 = $("input[name=csrfmiddlewaretoken]").val();
 
         var onay = 1;
         var metin = "";
@@ -49,7 +50,7 @@ var mainjs = {
                 url: '/login/',
                 type: 'POST',
                 headers: {
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': csrftoken4
                 },
                 data: {
                     'email': id_email,
@@ -106,18 +107,7 @@ var mainjs = {
 
             let csrftoken = Cookies.get('csrftoken');
 
-            console.log("csrftoken:"+csrftoken);
-
-            var csrftoken1 = this.getCookie('csrftoken');
-            console.log("csrftoken1:"+csrftoken1);
-
-
-            let csrftoken3 = $("#csrf_token").val();
-            console.log("csrftoken3:"+csrftoken3);
-
-
             let csrftoken4 = $("input[name=csrfmiddlewaretoken]").val();
-             console.log("csrftoken4:"+csrftoken4);
 
 
             $.ajax({
