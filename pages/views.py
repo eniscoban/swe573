@@ -132,7 +132,9 @@ def search(request,  *args, **kwargs):
     recipes_all_temp = []
     keyword = request.GET.get('keyword')
 
-    recipes_keyword = Recipe.objects.filter(recipe_name__contains=keyword).order_by('-id')
+    recipes_keyword = Recipe.objects.filter(recipe_name__contains=keyword)
+    print(recipes_keyword)
+    print("***")
     for each in recipes_keyword:
         each.like_count = Likes.objects.filter(recipe_id=each.id).count()
         each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
