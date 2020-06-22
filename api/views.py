@@ -15,7 +15,7 @@ import json, random, datetime
 import requests
 
 
-
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def register(request):
@@ -39,6 +39,7 @@ def register(request):
         return Response({'authenticated': False, 'token': None})
 
 
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def login(request):

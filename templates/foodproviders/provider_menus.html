@@ -29,6 +29,7 @@
 
                                 <div class="kt-widget__top">
 
+                                {% csrf_token %}
 
                                     <div class="kt-widget__content pl-0" >
                                         <div class="kt-widget__head">
@@ -195,9 +196,9 @@
             food_provider_id: {{ provider.id }}
         }
 
-         let csrftoken = Cookies.get('csrftoken');
+         let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/createMenu/',
+                url: 'http://161.35.23.187:8000/api/createMenu/',
                 type: 'post',
                 data: sendData,
                 headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
@@ -220,9 +221,9 @@
             recipe_id_will_add: recipe_id_will_add
         }
 
-        let csrftoken = Cookies.get('csrftoken');
+        let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/addToMenu/',
+            url: 'http://161.35.23.187:8000/api/addToMenu/',
             type: 'post',
             data: sendData,
             headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
@@ -239,9 +240,9 @@
             recipe_id_will_remove: recipe_id
         }
 
-        let csrftoken = Cookies.get('csrftoken');
+        let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/removeFromMenu/',
+            url: 'http://161.35.23.187:8000/api/removeFromMenu/',
             type: 'post',
             data: sendData,
             headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },

@@ -57,6 +57,8 @@
 													<label>Please check your allergies!</label>
 													<div class="kt-checkbox-list">
 
+                                                    {% csrf_token %}
+
                                                         {% for each in all_allergies %}
 														<label class="kt-checkbox kt-checkbox--bold kt-checkbox--success">
 															<input value="{{ each.id }}" id="alerg" name="alerg[]" {% if each.selected >= 1 %} checked="checked" {% endif %} type="checkbox"> {{ each.allergie_name }}

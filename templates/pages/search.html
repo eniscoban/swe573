@@ -13,6 +13,7 @@
             <div class="row mb-3">
                 <div class="col-md-12">
                     <form action="/search/">
+                        {% csrf_token %}
                     <div class="input-group">
                         <input type="text" class="form-control" value="{{ keyword }}" id="keyword" name="keyword" placeholder="Search for...">
                         <div class="input-group-append">

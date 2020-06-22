@@ -41,6 +41,8 @@
                     </div>
                     <div class="kt-portlet__body">
 
+                        {% csrf_token %}
+
                         <div class="form-group">
                             <label>Page Name</label>
                             <input type="text" class="form-control" name="page_name" id="page_name" value="{{ provider.provider_name }}" >
@@ -112,16 +114,16 @@
             }
 
 
-            let csrftoken = Cookies.get('csrftoken');
+            let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/edit_foodprovider/',
+                url: 'http://161.35.23.187:8000/api/edit_foodprovider/',
                 type: 'post',
                 data: sendData,
                 headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
                 dataType: 'json',
                 success: function(data) {
                     console.log(data);
-                    window.location.replace("http://127.0.0.1:8000/provider/{{ provider.id }}/");
+                    window.location.replace("http://161.35.23.187:8000/provider/{{ provider.id }}/");
 
                 }
             });
