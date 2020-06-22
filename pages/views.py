@@ -212,6 +212,7 @@ def tag(request, tag_id):
             'left_menu_selected': '',
             'uDetails': userDetails(request),
             'tag_name': tag_name[0],
+            'tag_id': tag_id,
             'recipes_all': recipes_all_temp
             }
     return render(request, 'pages/tag.html', args)
