@@ -132,18 +132,15 @@ def search(request,  *args, **kwargs):
     recipes_all_temp = []
     keyword = request.GET.get('keyword')
 
+    # icontains disables case insensitive selection
+    # for case insensitive use contains
     recipes_keyword = Recipe.objects.filter(recipe_name__icontains=keyword)
-    #filter(recipe_name__contains=keyword)
-    print(recipes_keyword.count())
-    print("***")
-    print(keyword)
 
     for each in recipes_keyword:
         each.like_count = Likes.objects.filter(recipe_id=each.id).count()
         each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
         each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
         recipes_all_temp.append(each)
-
 
     args = {'title': "Search Recipe",
             'left_menu_selected': '',
@@ -155,7 +152,6 @@ def search(request,  *args, **kwargs):
 
 def cuisine(request, cuisine_id):
     recipes_all = Recipe.objects.filter(recipe_cuisine=cuisine_id).order_by('-id')
-    #cuis = Cuisine.objects.get(id=cuisine_id)
     cuis = get_object_or_404(Cuisine, pk=cuisine_id)
 
     args = {'title': "My Recipe",
