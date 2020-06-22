@@ -11,6 +11,11 @@ from foodproviders.models import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
 
 
+'''
+Register page view. Creates an Account object which is a custom User class
+Authentication is based on email and password. 
+Needs email, username and password.  
+'''
 def user_signup(request,  *args, **kwargs):
     if request.method == 'POST':
 
@@ -26,9 +31,7 @@ def user_signup(request,  *args, **kwargs):
 
             user = Account
             user.objects.create_user(email, username, password)
-
             user = authenticate(email=email, password=password)
-
             django_login(request, user)
 
             arg = {'authenticated': True, 'gelen': "hut"}
@@ -37,43 +40,44 @@ def user_signup(request,  *args, **kwargs):
             print("------")
             arg = {'authenticated': False}
             return HttpResponse(json.dumps(arg), content_type="application/json")
-
     else:
-
         args = {}
         return render(request, 'accounts/signup.html', args)
 
+'''
+Login page view. Checks if user exist or not. 
+Authentication is based on email and password. 
+Needs email, username and password.  
+'''
 def user_login(request, *args, **kwargs):
     if request.method == 'POST':
 
         email = request.POST.get('email')
         raw_password = request.POST.get('password')
-
         user = authenticate(email=email, password=raw_password)
-
 
         if user is not None and user.is_active:
             django_login(request, user)
-
             arg = {'authenticated': True}
             return HttpResponse(json.dumps(arg), content_type="application/json")
 
         else:
             arg = {'authenticated': False}
             return HttpResponse(json.dumps(arg), content_type="application/json")
-
     else:
         args = {}
         return render(request, 'accounts/login.html', args)
 
-
+#logout method , clears session
 def logout(request):
     django_logout(request)
     return HttpResponseRedirect(reverse('home'))
 
-
+'''
+A common function that returns all user details. 
+It is imported by many other page.
+'''
 def userDetails(request):
-
 
     if request.user.is_authenticated:
         token, _ = Token.objects.get_or_create(user=request.user)
@@ -126,6 +130,8 @@ def userDetails(request):
             }
 
 
+# This view is used when client want to display another users page.
+# like_count, comment_count and liked values added extra to recipe object.
 def userPage(request, user_name,  *args, **kwargs):
 
     otheruser = Account.objects.get(username=user_name)
@@ -141,6 +147,7 @@ def userPage(request, user_name,  *args, **kwargs):
         for each in recipes_all:
             each.like_count = Likes.objects.filter(recipe_id=each.id).count()
             each.comment_count = Comments.objects.filter(recipe_id=each.id).count()
+            # if client liked recipe or not
             each.liked = Likes.objects.filter(recipe_id=each.id, like_user=request.user).count()
             recipes_all_temp.append(each)
 
@@ -156,6 +163,7 @@ def userPage(request, user_name,  *args, **kwargs):
         return render(request, 'pages/user_page.html', args)
 
 
+# Displays follower users of client
 def userFollowers(request, user_name,  *args, **kwargs):
 
     otheruser = Account.objects.get(username=user_name)
@@ -168,7 +176,7 @@ def userFollowers(request, user_name,  *args, **kwargs):
     for each in users:
         follower_count = Follower.objects.filter(target=each.follower).count()
         recipe_count = Recipe.objects.filter(recipe_user=each.follower).count()
-
+        #extra information about listed user
         each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         users2_temp.append(each)
 
@@ -183,12 +191,16 @@ def userFollowers(request, user_name,  *args, **kwargs):
     }
     return render(request, 'pages/user_followers.html', args)
 
-
+'''
+Lists food providers which are created by user himself.
+They are listed at users profile pages as tab
+'''
 def userProviders(request, user_name,  *args, **kwargs):
 
     otheruser = Account.objects.get(username=user_name)
     recipes_all = Recipe.objects.filter(recipe_user=otheruser.id).order_by('-id')
 
+    #if user follows provider or not
     is_following_by_me = Follower.objects.filter(follower=request.user, target=otheruser).count()
 
     providers = FoodProviders.objects.filter(provider_user=otheruser.id)
@@ -196,7 +208,7 @@ def userProviders(request, user_name,  *args, **kwargs):
     for each in providers:
         follower_count = FollowerProvider.objects.filter(targetProvider=each).count()
         recipe_count = Recipe.objects.filter(recipe_food_provider=each).count()
-
+        #extra information about provider
         each.extra = str(recipe_count) + " recipes, " + str(follower_count) + " followers"
         providers_temp.append(each)
 

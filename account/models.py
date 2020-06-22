@@ -4,6 +4,8 @@ from datetime import datetime
 
 
 class MyAccountManager(BaseUserManager):
+
+    #Creating new user when register
     def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -19,6 +21,7 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    # Creating new superuser
     def create_superuser(self, email, username, password):
         user = self.create_user(
             email=self.normalize_email(email),
@@ -31,7 +34,11 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
+'''
+Custom user model to use email field for login.
+Email_temp and email_temp_hash fields are for changing user emails related to setting page.
+is_admin, is_staff and is_superuser boolean fields are created for future developments.
+'''
 class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name="email", max_length=100, unique=True)
     username = models.CharField(max_length=30, unique=True)
@@ -67,7 +74,7 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-
+# Follower object for users.
 class Follower(models.Model):
     follower = models.ForeignKey(Account, related_name='target', null=True,  on_delete=models.SET_NULL)
     target = models.ForeignKey(Account, related_name='follower', null=True,  on_delete=models.SET_NULL)
@@ -75,13 +82,14 @@ class Follower(models.Model):
     def __str__(self):
         return self.follower.username + " -> " + self.target.username
 
+# Allergies object for users. These may be set in settings page.
 class Allergies(models.Model):
     allergie_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.allergie_name
 
-
+# Relation beetween allergies and users.
 class UserAllergies(models.Model):
     allergie = models.ForeignKey(Allergies, null=True, blank=True, on_delete=models.SET_NULL)
     allergie_user = models.ForeignKey(Account, null=True, blank=True, on_delete=models.SET_NULL)
