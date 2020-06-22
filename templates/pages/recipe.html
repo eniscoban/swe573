@@ -46,7 +46,7 @@
                         <h4 class="w-100 color_black" >{{ recipe_name }}</h4>
                         <div class="w-100" ><a href="/category/{{ recipe_category.id }}/">{{ recipe_category }}</a> / <a href="/cuisine/{{ recipe_cuisine.id }}/">{{ recipe_cuisine }}</a> / {{ recipe_how_many_person }}-person</div>
 
-                        <div class="w-100 mt-2">{{ recipe_description}}</div>
+                        <div class="w-100 mt-2">{{ recipe_description|linebreaks}}</div>
 
 
 
