@@ -140,7 +140,7 @@ var mainjs = {
        let csrftoken = Cookies.get('csrftoken');
 
        $.ajax({
-            url: 'http://127.0.0.1:8000/api/change_avatar/',
+            url: 'http://161.35.23.187:8000/api/change_avatar/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
@@ -219,7 +219,7 @@ var mainjs = {
        if(comment.length >= 3){
 
             $.ajax({
-            url: 'http://127.0.0.1:8000/api/add_comment/',
+            url: 'http://161.35.23.187:8000/api/add_comment/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
@@ -241,7 +241,7 @@ var mainjs = {
         let csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
-        url: 'http://127.0.0.1:8000/api/follow_user/',
+        url: 'http://161.35.23.187:8000/api/follow_user/',
         type: 'POST',
         headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
         data: {
@@ -259,7 +259,7 @@ var mainjs = {
         let csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/unfollow_user/',
+            url: 'http://161.35.23.187:8000/api/unfollow_user/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
@@ -277,7 +277,7 @@ var mainjs = {
        let csrftoken = Cookies.get('csrftoken');
 
        $.ajax({
-            url: 'http://127.0.0.1:8000/api/like_recipe/',
+            url: 'http://161.35.23.187:8000/api/like_recipe/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
@@ -295,7 +295,7 @@ var mainjs = {
        let csrftoken = Cookies.get('csrftoken');
 
        $.ajax({
-            url: 'http://127.0.0.1:8000/api/unlike_recipe/',
+            url: 'http://161.35.23.187:8000/api/unlike_recipe/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
@@ -314,7 +314,7 @@ var mainjs = {
         let csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
-        url: 'http://127.0.0.1:8000/api/follow_provider/',
+        url: 'http://161.35.23.187:8000/api/follow_provider/',
         type: 'POST',
         headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
         data: {
@@ -332,7 +332,7 @@ var mainjs = {
         let csrftoken = Cookies.get('csrftoken');
 
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/unfollow_provider/',
+            url: 'http://161.35.23.187:8000/api/unfollow_provider/',
             type: 'POST',
             headers: { 'X-CSRFToken': csrftoken,  'Authorization': token_g  },
             data: {
