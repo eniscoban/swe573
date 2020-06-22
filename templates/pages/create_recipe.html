@@ -193,7 +193,7 @@ function restCallTag_Wikidata() {
     }
 
      $.ajax({
-        url: 'http://127.0.0.1:8000/api/getTagsFromWikidata/',
+        url: 'http://161.35.23.187:8000/api/getTagsFromWikidata/',
         type: 'post',
         data: sendData,
         headers: {'X-CSRFToken': csrftoken4, 'Authorization': 'Token {{ token }}' },
@@ -443,7 +443,7 @@ function addRecipe(){
 
     let csrftoken = $("input[name=csrfmiddlewaretoken]").val();
     $.ajax({
-        url: 'http://127.0.0.1:8000/api/create_recipe/',
+        url: 'http://161.35.23.187:8000/api/create_recipe/',
         type: 'post',
         data: sendData,
         headers: {'X-CSRFToken': csrftoken, 'Authorization': 'Token {{ token }}' },
