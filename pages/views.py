@@ -424,7 +424,8 @@ def validate_username(request):
 
 def providers_near_me(request, *args, **kwargs):
     meter = request.GET.get('meter', None)
-    providers = FollowerProvider.objects.filter(followerProvider=request.user)
+
+    providers = FollowerProvider.objects.all()
     providers_temp = []
     for each in providers:
         follower_count = FollowerProvider.objects.filter(targetProvider=each.targetProvider).count()

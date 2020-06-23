@@ -81,7 +81,10 @@
 
       function foundLocation(pos) {
 
-          alert(`${pos.coords.latitude}, ${pos.coords.longitude}`);
+          //alert(`${latitude}, ${longitude}`);
+
+          latitude = 40.9960448;
+          longitude = 29.124198399999997;
 
 
             mapboxgl.accessToken = 'pk.eyJ1IjoiZW5pc2NvYmFuIiwiYSI6ImNrOWczc2poYjBoanczbG8zYjE1ejgzbnYifQ.pjaYGrcc9FfzxNh7xSin7A';
@@ -93,7 +96,7 @@
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v9',
-                center: [pos.coords.longitude, pos.coords.latitude],
+                center: [longitude, latitude],
                 zoom: 9,
                 minZoom: 5,
                 maxZoom: 15
@@ -112,7 +115,7 @@
                         "type": "Feature",
                         "geometry": {
                           "type": "Point",
-                          "coordinates": [pos.coords.longitude, pos.coords.latitude]
+                          "coordinates": [longitude, latitude]
                         }
                       }]
                     }
@@ -126,7 +129,7 @@
                       "circle-radius": {
                         stops: [
                           [5, 1],
-                          [18, metersToPixelsAtMaxZoom( {{ meter }}, pos.coords.latitude)]
+                          [18, metersToPixelsAtMaxZoom( {{ meter }}, latitude)]
                         ],
                         base: 2
                       },
@@ -239,7 +242,7 @@
                                 'type': 'Feature',
                                 'geometry': {
                                     'type': 'Point',
-                                    'coordinates': [pos.coords.longitude, pos.coords.latitude]
+                                    'coordinates': [longitude, latitude]
                                 }
                             }]
                         }
@@ -257,12 +260,12 @@
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v11',
-                center: [pos.coords.longitude, pos.coords.latitude],
+                center: [longitude, latitude],
                 zoom: 9
             });
 
             var marker = new mapboxgl.Marker()
-            .setLngLat([pos.coords.longitude, pos.coords.latitude])
+            .setLngLat([longitude, latitude])
             .addTo(map);
 
              */
@@ -292,8 +295,8 @@
 
 
       $( document ).ready(function() {
-          getGeolocation();
-
+          // getGeolocation();
+            foundLocation();
 
 
         });
