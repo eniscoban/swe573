@@ -81,7 +81,7 @@
 
       function success(pos) {
 
-          //alert(`${pos.coords.latitude}, ${pos.coords.longitude}`);
+          alert(`${pos.coords.latitude}, ${pos.coords.longitude}`);
 
 
             mapboxgl.accessToken = 'pk.eyJ1IjoiZW5pc2NvYmFuIiwiYSI6ImNrOWczc2poYjBoanczbG8zYjE1ejgzbnYifQ.pjaYGrcc9FfzxNh7xSin7A';
@@ -274,6 +274,7 @@
       function getGeolocation() {
           if (navigator.geolocation) {
 
+
               navigator.geolocation.getCurrentPosition(success, error);
           } else {
 
@@ -281,13 +282,17 @@
       }
 
 
+
+
+
+
+
+
       $( document ).ready(function() {
           getGeolocation();
 
 
-          console.log("---");
-          console.log(78271.484 / 2 ** 9);
-          console.log("---");
+
         });
 
 
