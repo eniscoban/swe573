@@ -15,6 +15,10 @@ import json, random, datetime
 import requests
 
 
+
+# Register user via email, username and password.
+# After recording, it returns generated token
+# It also create a session for client
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -28,7 +32,6 @@ def register(request):
 
     user = Account
     user.objects.create_user(email,username,password)
-
     user = authenticate(email=email, password=password)
 
     if user is not None:
@@ -39,6 +42,9 @@ def register(request):
         return Response({'authenticated': False, 'token': None})
 
 
+# needs valid email adn password.
+# It returns generated token
+# It also create a session for client
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -48,9 +54,7 @@ def login(request):
         password = request.data['password']
     except:
         return Response({'error': 'Please provide correct email and password'}, status=HTTP_400_BAD_REQUEST)
-
     user = authenticate(email=email, password=password)
-
     if user is not None:
         token, _ = Token.objects.get_or_create(user=user)
         request.session['wwwe'] = token.key
@@ -58,7 +62,7 @@ def login(request):
     else:
         return Response({'authenticated': False, 'token': None})
 
-
+# listst member's recipes
 @csrf_exempt
 @api_view(["POST"])
 def list_my_recipes(request):
@@ -76,6 +80,9 @@ def list_all_recipes(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+# creates recipe with given name, category,cuisine, ingredients and nutrients
+# user can post recipe for himself or for the provider he created before
+# returns added recipe id for redirection
 @csrf_exempt
 @api_view(["POST"])
 def create_recipe(request):
@@ -137,7 +144,7 @@ def create_recipe(request):
     }
     return JsonResponse(data)
 
-
+#adds comment for recipe
 @csrf_exempt
 @api_view(["POST"])
 def add_comment(request):
@@ -216,6 +223,9 @@ def unlike_recipe(request):
     return JsonResponse(data)
 
 
+# Creates food provider page for user.
+# latitude and longitude values must be recorded as Point after Geo features added.
+# Returns added page id for redirection
 @csrf_exempt
 @api_view(["POST"])
 def create_foodprovider(request):
@@ -272,7 +282,8 @@ def edit_foodprovider(request):
     }
     return JsonResponse(data)
 
-
+# only food providers can create menu
+# name and provider is needed
 @csrf_exempt
 @api_view(["POST"])
 def createMenu(request):
@@ -331,12 +342,9 @@ def removeFromMenu(request):
 @csrf_exempt
 @api_view(["POST"])
 def follow_provider(request):
-
     user = Token.objects.get(key=request.auth).user
     target_provider = request.data['target_provider']
-
     target = FoodProviders.objects.get(id=target_provider)
-
     newFollow = FollowerProvider(
         targetProvider=target,
         followerProvider=user
@@ -363,30 +371,30 @@ def unfollow_provider(request):
     return JsonResponse(data)
 
 
+# users can change their avatars
+# there are only 9 different avatar
+# for next release, uploading photo feature should be added
 @csrf_exempt
 @api_view(["POST"])
 def change_avatar(request):
     avatars = ['prf_1.png', 'prf_2.png', 'prf_3.png', 'prf_4.png', 'prf_5.png', 'prf_6.png',
                'prf_7.png', 'prf_8.png', 'prf_9.png']
     user = Token.objects.get(key=request.auth).user
-
     user.profile_photo = random.choice(avatars)
     user.save()
-
     data = {'success': True}
     return JsonResponse(data)
 
+# Requests to wikidata doen't need a secretkey
+# Response redirected to relevant javascript as output
 @csrf_exempt
 @api_view(["POST"])
 def getTagsFromWikidata(request):
     keyword = request.data['keyword']
     user = Token.objects.get(key=request.auth).user
-
     url = "https://wikidata.org/w/api.php?action=wbsearchentities&search=" + keyword + "&format=json&language=en&type=item&continue=0"
-
     response = requests.get(url)
-
-    print(response.content)
+    #print(response.content)
     #data = {'success': True}
     return HttpResponse(response.content)
 
