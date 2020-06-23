@@ -25,7 +25,7 @@ SECRET_KEY = '*$q^^71vi%!bcguvb^l9naj@+&a7$&krgycu%b8+53ynfveu-@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['161.35.23.187','127.0.0.1','wwwe.codes']
 
 
 
@@ -108,7 +108,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'wwwe2',
-        'USER': 'postgres',
+        'USER': 'enis_user',
         'PASSWORD': '1q2w3e',
         'HOST': 'localhost',
         'PORT': '5432',
