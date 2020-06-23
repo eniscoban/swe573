@@ -32,6 +32,13 @@
                  {% include "inc/recipe_short.html" %}
             {% endfor %}
 
+
+            {% if recipes_all %}
+            {% else %}
+                <div class="text-center pt-5">No recipe yet! Please follow some users.</div>
+            {% endif %}
+
+
         </div>
 
     </div>
