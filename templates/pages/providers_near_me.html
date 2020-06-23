@@ -76,10 +76,10 @@
 
 
       function error(err) {
-
+        console.log(err);
       }
 
-      function success(pos) {
+      function foundLocation(pos) {
 
           alert(`${pos.coords.latitude}, ${pos.coords.longitude}`);
 
@@ -275,7 +275,8 @@
           if (navigator.geolocation) {
 
                 console.log("success");
-                navigator.geolocation.getCurrentPosition(success, error);
+                navigator.geolocation.getCurrentPosition(foundLocation, error);
+
           } else {
 
               console.log("hata");
