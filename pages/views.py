@@ -15,7 +15,9 @@ from foodproviders.views import FoodProviders, FollowerProvider
 from rest_framework.authtoken.models import Token
 
 
-
+# system displays following users' recipes on home page
+# It returns users details just like other pages -> uDetails
+# recipes_all returns empty if no recipe found
 def home(request):
     if request.user.is_authenticated:
 
@@ -28,7 +30,6 @@ def home(request):
         providers_followed = []
         for each in providers:
             providers_followed.append(each.targetProvider.id)
-
 
         recipes_all = Recipe.objects.filter(Q(recipe_user__in=users_followed) | Q(recipe_food_provider__in=providers_followed)).order_by('-id')
         recipes_all_temp = []
@@ -174,6 +175,8 @@ def category(request, category_id):
     recipes_all = Recipe.objects.filter(recipe_category=category_id).order_by('-id')
     cat = Category.objects.get(id=category_id)
 
+    # adds like_count, comment_count and a 0,1 value for liked or not to recipes_all list
+    # recipes_all_temp will be sent as result
     recipes_all_temp = []
     for each in recipes_all:
         each.like_count = Likes.objects.filter(recipe_id=each.id).count()
@@ -197,6 +200,8 @@ def tag(request, tag_id):
     for each in tag_recipeid:
         arr.append(each.recipe_id.id)
 
+    # adds like_count, comment_count and a 0,1 value for liked or not to recipes_all list
+    # recipes_all_temp will be sent as result
     recipes_all = Recipe.objects.filter(id__in=arr).order_by('-id')
     recipes_all_temp = []
     for each in recipes_all:
@@ -226,6 +231,9 @@ def notifications(request):
     return render(request, 'pages/notifications.html', args)
 
 
+# If a user changes his/her email address, a confirmation mail is sent.
+# To confirm user clicks an url and this view welcomes
+# if coming hash is correct, function deletes old email and updates email
 def confirm_email(request, email_hash):
     try:
         new_email = Account.objects.get(email_temp_hash=email_hash)
@@ -243,6 +251,7 @@ def confirm_email(request, email_hash):
     return render(request, 'pages/confirm_email.html', args)
 
 
+# It sends en email to user
 def settings_email(request):
     if request.method == 'POST':
         new_email = request.POST.get('new_email')
@@ -256,7 +265,7 @@ def settings_email(request):
             request.user.email_temp = new_email
             request.user.save()
 
-            mess = "Click to confirm your email: http://127.0.0.1:8000/confirm_email/" + hash_result
+            mess = "Click to confirm your email: http://161.35.23.187:8000/confirm_email/" + hash_result
             send_mail(
                 'Please confirm your email address',
                 mess,
@@ -302,11 +311,15 @@ def settings_password(request):
                 }
         return render(request, 'pages/settings_password.html', args)
 
+
+# user can select allergies form list
+# if method is post function gets result as array of ids-> alerg[]
 def settings_allergies(request):
 
     if request.method == 'POST':
 
         UserAllergies.objects.filter(allergie_user=request.user).delete()
+        # we get selected ids as array
         alerg = request.POST.getlist('alerg[]')
         for each in alerg:
 
@@ -325,7 +338,6 @@ def settings_allergies(request):
         for each in all_allergies:
             each.selected = UserAllergies.objects.filter(allergie_user=request.user, allergie= each).count()
             all_allergies_temp.append(each)
-
 
         args = {'title': "Allergies",
                 'left_menu_selected': 'settings',
@@ -413,7 +425,7 @@ def my_following_providers(request):
             }
     return render(request, 'pages/my_following_providers.html', args)
 
-
+# checks if username really exists or not
 def validate_username(request):
     username = request.GET.get('username', None)
     data = {
@@ -421,7 +433,9 @@ def validate_username(request):
     }
     return JsonResponse(data)
 
-
+# it is not working well
+# Geo plugins must be set up for next release
+# Provider and user's current location must be converted to Point data type
 def providers_near_me(request, *args, **kwargs):
     meter = request.GET.get('meter', None)
 
